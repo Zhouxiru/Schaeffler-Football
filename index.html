@@ -150,7 +150,7 @@
       width: 100%;
     }
 
-    /* ========== 下场比赛倒计时 ========== */
+    /* ========== 下场比赛倒计时模块（去掉秒） ========== */
     .match-countdown {
       background: #141a18;
       border: 1px solid var(--border-green);
@@ -656,7 +656,7 @@
     </nav>
   </header>
 
-  <!-- 下场比赛倒计时模块 -->
+  <!-- 下场比赛倒计时模块（移除秒） -->
   <section class="match-countdown">
     <div class="countdown-title">⚽ 下场比赛倒计时</div>
     <div class="countdown-box">
@@ -672,12 +672,8 @@
         <span id="min">00</span>
         <label>分</label>
       </div>
-      <div class="time-item">
-        <span id="sec">00</span>
-        <label>秒</label>
-      </div>
     </div>
-    <div id="match-tip" class="match-tip">对阵：舍弗勒 VS 西交利物浦｜地点：东区球场</div>
+    <div id="match-tip" class="match-tip">加载中...</div>
   </section>
 
   <div class="hero">
@@ -1102,22 +1098,30 @@
     </div>
   </footer>
 
-  <!-- 倒计时脚本 -->
   <script>
-    const matchTime = new Date("2026-11-01 15:30:00");
-    function updateCountdown() {
-      const now = new Date();
-      const diff = matchTime - now;
-      if (diff <= 0) {
-        document.querySelector(".countdown-box").style.display = "none";
-        document.getElementById("match-tip").innerText = "🔥 比赛正在进行 / 已结束！";
-        return;
-      }
-      const day = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const min = Math.floor((diff / (1000 * 60)) % 60);
-      const sec = Math.floor((diff / 1000) % 60);
-      document.getElementById("day").innerText = String(day).padStart(2, "0");
-      document.getElementById("hour").innerText = String(hour).padStart(2, "0");
-      document.getElementById("min").innerText
-<!-- （注：内容由AI生成） -->
+    // 每60秒拉取一次 data.json
+    const FETCH_INTERVAL = 60 * 1000;
+    let timer = null;
+
+    // 拉取配置 + 更新倒计时
+    async function fetchMatchConfig() {
+      try {
+        const res = await fetch(`./data.json?t=${Date.now()}`);
+        if (!res.ok) throw new Error("json fetch fail");
+        const cfg = await res.json();
+        const matchTime = new Date(cfg.matchTime);
+        const tipText = cfg.matchTip;
+
+        const now = new Date();
+        const diff = matchTime - now;
+
+        if (diff <= 0) {
+          document.querySelector(".countdown-box").style.display = "none";
+          document.getElementById("match-tip").innerText = tipText;
+          return;
+        } else {
+          document.querySelector(".countdown-box").style.display = "flex";
+        }
+
+        const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
