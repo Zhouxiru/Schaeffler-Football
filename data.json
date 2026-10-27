@@ -1,12 +1,266 @@
-[
-  {
-    "name": "张三",
-    "age": 25,
-    "desc": "测试数据1"
+{
+  "nextMatch": {
+    "matchTime": "2026-11-01T15:30:00",
+    "matchTip": "舍弗勒 VS 西交利物浦｜东区球场"
   },
-  {
-    "name": "李四",
-    "age": 30,
-    "desc": "测试数据2"
-  }
-]
+  "players": [
+    {
+      "number": 9,
+      "name": "周希孺",
+      "birth": "1997-03",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 2,
+      "hotKey": "schaeffler-football-zhouxiru"
+    },
+    {
+      "number": 27,
+      "name": "周星泽",
+      "birth": "2004-11",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 1,
+      "hotKey": "schaeffler-football-zhouxingze"
+    },
+    {
+      "number": 8,
+      "name": "余彬",
+      "birth": "2004-11",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 1,
+      "hotKey": "schaeffler-football-yubin"
+    },
+    {
+      "number": 1,
+      "name": "赵佳",
+      "birth": "1986-09",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhaojia"
+    },
+    {
+      "number": 11,
+      "name": "杨贻杰",
+      "birth": "1982-02",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-yangyijie"
+    },
+    {
+      "number": 28,
+      "name": "朱敏",
+      "birth": "1986-12",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhumin"
+    },
+    {
+      "number": 58,
+      "name": "胡徐旸",
+      "birth": "2005-11",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-huxuyang"
+    },
+    {
+      "number": 47,
+      "name": "朱鸣",
+      "birth": "1999-09",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 2,
+      "hotKey": "schaeffler-football-zhuming"
+    },
+    {
+      "number": 23,
+      "name": "张宇阳",
+      "birth": "1993-08",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhangyuyang"
+    },
+    {
+      "number": 12,
+      "name": "刘黎黎",
+      "birth": "1987-12",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-liulili"
+    },
+    {
+      "number": 14,
+      "name": "潘昊",
+      "birth": "1997-09",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-panhao"
+    },
+    {
+      "number": 18,
+      "name": "陈诚",
+      "birth": "1988-01",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-chencheng"
+    },
+    {
+      "number": 2,
+      "name": "顾叶强",
+      "birth": "2000-11",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-guyeqiang"
+    },
+    {
+      "number": 20,
+      "name": "陈波",
+      "birth": "1989-11",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-chenbo"
+    },
+    {
+      "number": 21,
+      "name": "张涛",
+      "birth": "1990-06",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhangtao"
+    },
+    {
+      "number": 22,
+      "name": "郑晓波",
+      "birth": "1987-06",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhengxiaobo"
+    },
+    {
+      "number": 30,
+      "name": "林培",
+      "birth": "1991-06",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-linpei"
+    },
+    {
+      "number": 32,
+      "name": "张毅峰",
+      "birth": "1997-09",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhangyifeng"
+    },
+    {
+      "number": 4,
+      "name": "陆敏",
+      "birth": "1978-11",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-lumin"
+    },
+    {
+      "number": 5,
+      "name": "蒋棣",
+      "birth": "1997-07",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-jiangdi"
+    },
+    {
+      "number": 6,
+      "name": "卢杰",
+      "birth": "2002-10",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-lujie"
+    },
+    {
+      "number": 7,
+      "name": "武阳",
+      "birth": "1984-09",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-wuyang"
+    },
+    {
+      "number": 77,
+      "name": "凌晨",
+      "birth": "1988-07",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-lingchen"
+    }
+  ],
+  "matches": [
+    {
+      "date": "10.25 14:00",
+      "home": "苏州健雄",
+      "away": "舍弗勒",
+      "score": "0 - 6",
+      "place": "东区"
+    },
+    {
+      "date": "11.01 15:30",
+      "home": "舍弗勒",
+      "away": "西交利物浦",
+      "score": "待开赛",
+      "place": "东区"
+    },
+    {
+      "date": "11.08 14:00",
+      "home": "舍弗勒",
+      "away": "荷顿瑞途",
+      "score": "待开赛",
+      "place": "东区"
+    },
+    {
+      "date": "11.15 15:30",
+      "home": "舍弗勒",
+      "away": "博艺园林",
+      "score": "待开赛",
+      "place": "东区"
+    },
+    {
+      "date": "11.21 14:00",
+      "home": "太仓国际",
+      "away": "舍弗勒",
+      "score": "待开赛",
+      "place": "东区"
+    },
+    {
+      "date": "11.28 15:30",
+      "home": "兰德紫藤",
+      "away": "舍弗勒",
+      "score": "待开赛",
+      "place": "东区"
+    },
+    {
+      "date": "12.05 15:30",
+      "home": "辣手",
+      "away": "舍弗勒",
+      "score": "待开赛",
+      "place": "西区"
+    }
+  ]
+}
