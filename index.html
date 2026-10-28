@@ -870,10 +870,10 @@
     }
 
     // 【点赞：调用PG rpc addhot，参数 hotKey】
-    async function addHot(playerId, btn) {
+    async function addHot(playerid, btn) {
       const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
       const now = Date.now();
-      if(voteRecord[playerId] && (now - voteRecord[playerId]) < VOTE_EXPIRE){
+      if(voteRecord[playerid] && (now - voteRecord[playerid]) < VOTE_EXPIRE){
         alert("24小时内已经给该球员点过赞啦！");
         return;
       }
@@ -885,13 +885,13 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            hotKey: playerId
+            hotKey: playerid
           })
         });
         if (!resp.ok) throw new Error("rpc fail");
         // 刷新热度列表
         await loadAllHot();
-        voteRecord[playerId] = now;
+        voteRecord[playerid] = now;
         localStorage.setItem(STORAGE_VOTE_KEY, JSON.stringify(voteRecord));
       } catch(err){
         console.error("点赞请求异常详情：", err);
