@@ -782,8 +782,10 @@
 
   <script>
     // =========【这里改成你的TCB PostgREST地址 + 匿名apikey】=========
-    const POSTGREST_URL = "https://你的PostgREST地址";
-    const API_KEY = "你的anon密钥";
+    
+    const POSTGREST_URL = "https://schaeffler-football-d4bib37af266.api.shanghai.tcb-api.tencentcloudapi.com/v1/rdb/rest";
+    const API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyNzcyY2YxLTRkOGYtNGIzYi1hOTc3LTU0MjU0YWI5YzEyMSJ9.eyJpc3MiOiJodHRwczovL3NjaGFlZmZsZXItZm9vdGJhbGwtZDRiaWIzN2FmMjY2LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsImV4cCI6NDA5Njg3ODc1MywiaWF0IjoxNzkzMTk1NTUzLCJub25jZSI6InEwZTlhTi1vVGJlTGM4ZTJLcGNET3ciLCJhdF9oYXNoIjoicTBlOWFOLW9UYmVMYzhlMktwY0RPdyIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.GLUOTVpBogI--Tb_NvOSxoSKpZ2YVkNk6SLORhBwIhSemNoIKHGjgJ8csfTc8cnPqmSQww47QNL5B2MLRSlpWE4nFJlzJZh1cuSt73j8VT1YVpFe6WwB_iTrdVeOP0d6hYdM_ECamPZDnfRYdFc65WbpxssChFnOUSP_cH-jjBT0PaJohlczoFPceWKJOvlYz-jsX4V7mcture5o4a47oHTO7YVp5CniZ7jSby7JC6sePiNe01i_BK5FJIS7q0k011er1zdQngXuMxuViVJmt_QFLohsaKAAksFiAewJtrKdf349gKnhqsP5lR6zCfbsFTu-pO4e7kyE1WHhi3iq3g";
+
     const FETCH_INTERVAL = 60 * 1000;
     let timer = null;
     // 热度缓存
