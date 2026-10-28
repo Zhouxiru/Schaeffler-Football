@@ -782,7 +782,6 @@
 
   <script>
     // =========【这里改成你的TCB PostgREST地址 + 匿名apikey】=========
-        // =========【TCB PostgREST 配置】=========
     const POSTGREST_URL = "https://schaeffler-football-d4bib37af266.api.shanghai.tcb-api.tencentcloudapi.com/v1/rdb/rest";
     const API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyNzcyY2YxLTRkOGYtNGIzYi1hOTc3LTU0MjU0YWI5YzEyMSJ9.eyJpc3MiOiJodHRwczovL3NjaGFlZmZsZXItZm9vdGJhbGwtZDRiaWIzN2FmMjY2LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsImV4cCI6NDA5Njg3ODc1MywiaWF0IjoxNzkzMTk1NTUzLCJub25jZSI6InEwZTlhTi1vVGJlTGM4ZTJLcGNET3ciLCJhdF9oYXNoIjoicTBlOWFOLW9UYmVMYzhlMktwY0RPdyIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.GLUOTVpBogI--Tb_NvOSxoSKpZ2YVkNk6SLORhBwIhSemNoIKHGjgJ8csfTc8cnPqmSQww47QNL5B2MLRSlpWE4nFJlzJZh1cuSt73j8VT1YVpFe6WwB_iTrdVeOP0d6hYdM_ECamPZDnfRYdFc65WbpxssChFnOUSP_cH-jjBT0PaJohlczoFPceWKJOvlYz-jsX4V7mcture5o4a47oHTO7YVp5CniZ7jSby7JC6sePiNe01i_BK5FJIS7q0k011er1zdQngXuMxuViVJmt_QFLohsaKAAksFiAewJtrKdf349gKnhqsP5lR6zCfbsFTu-pO4e7kyE1WHhi3iq3g";
 
@@ -846,7 +845,7 @@
       });
     }
 
-    // 读取全部热度：playerhot 表 p_id, hot
+    // 读取全部热度：playerhot 表 p_id, hotcount
     async function loadAllHot() {
       try {
         const res = await fetch(`${POSTGREST_URL}/playerhot`, { headers: getHeaders() });
@@ -854,7 +853,7 @@
         const list = await res.json();
         hotCache = {};
         list.forEach(item => {
-          hotCache[item.p_id] = item.hot;
+          hotCache[item.p_id] = item.hotcount;
         });
         renderHotUI();
       } catch (e) {
@@ -876,7 +875,7 @@
       })
     }
 
-    // 点赞，调用 rpc addhot(hotKey text) 和你当前SQL对齐
+    // 点赞，调用 rpc addhot(playerid text) 和你当前SQL对齐
     async function addHot(playerid, btn) {
       const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
       const now = Date.now();
@@ -886,11 +885,12 @@
       }
       btn.disabled = true;
       try {
+        // ✅ 重点修复：参数名改成 playerid，和PG函数参数完全一致
         const resp = await fetch(`${POSTGREST_URL}/rpc/addhot`, {
           method: "POST",
           headers: getHeaders(),
           body: JSON.stringify({
-            hotKey: playerid
+            playerid: playerid
           })
         });
         if (!resp.ok) throw new Error("rpc fail");
@@ -957,7 +957,7 @@
       fetchAllData();
       timer = setInterval(fetchAllData, FETCH_INTERVAL);
     })
+</script>
 
-  </script>
 </body>
 </html>
