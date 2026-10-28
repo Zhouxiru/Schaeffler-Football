@@ -418,52 +418,61 @@
       line-height: 1.75;
     }
 
-    /* ===== 球队荣誉板块新增样式 ===== */
-    .honour-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 22px;
-    }
-    .honour-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-soft);
-      padding: 26px;
-      transition: 0.35s;
-      position: relative;
-      overflow: hidden;
-    }
-    .honour-card::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 3px;
-      height: 100%;
-      background: var(--green-primary);
-    }
-    .honour-card:hover {
-      border-color: var(--border-green);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 24px rgba(0, 176, 80, 0.14);
-    }
-    .honour-year {
-      font-size: 13px;
-      color: var(--green-primary);
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-    .honour-name {
-      font-size: 16px;
-      color: var(--text-main);
-      line-height: 1.6;
-    }
-    .honour-trophy {
-      position: absolute;
-      right: 18px;
-      top: 22px;
-      font-size: 26px;
-      opacity: 0.25;
-    }
+/* ===== 球队荣誉板块样式（右侧奖杯居中高亮版，匹配截图布局） ===== */
+.honour-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+.honour-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  padding: 26px;
+  transition: 0.35s;
+  position: relative;
+  overflow: hidden;
+}
+.honour-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--green-primary);
+}
+.honour-card:hover {
+  border-color: var(--border-green);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 176, 80, 0.14);
+}
+.honour-year {
+  font-size: 13px;
+  color: var(--green-primary);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.honour-name {
+  font-size: 16px;
+  color: var(--text-main);
+  line-height: 1.6;
+  padding-right: 60px;  /* 文字右侧留白，避开奖杯 */
+}
+.honour-trophy {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 36px;
+  opacity: 1;
+  filter: drop-shadow(0 0 10px rgba(255, 210, 60, 0.6));
+  z-index: 3;
+}
+/* 亚军单独银色发光效果 */
+.honour-card:nth-child(2) .honour-trophy {
+  filter: drop-shadow(0 0 10px rgba(200, 210, 225, 0.5));
+}
+
 
     /* 位置分组标题 */
     .position-head {
