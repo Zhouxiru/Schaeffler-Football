@@ -4,14 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>舍弗勒足球俱乐部 | 官网</title>
-  <!-- CloudBase SDK -->
-  <script src="https://static.cloudbase.net/cloudbase-js-sdk/1.10.0/cloudbase.js"></script>
-  <script>
-    // ========== 这里改成你自己的CloudBase环境ID ==========
-    const TC_ENV_ID = "schaeffler-football-d4bib37af266";
-    const app = cloudbase.init({ env: TC_ENV_ID });
-    const db = app.database();
-  </script>
   <style>
     * {
       margin: 0;
@@ -789,6 +781,7 @@
   </footer>
 
   <script>
+    const POSTGREST_URL = "https://你的PostgREST地址"; // 👉 修改这里！
     const FETCH_INTERVAL = 60 * 1000;
     let timer = null;
     // 热度缓存
@@ -840,18 +833,22 @@
       });
     }
 
-    // 【云端读取全部热度】
+    // 【云端读取全部热度】PostgREST
     async function loadAllHot() {
       try {
-        const res = await db.collection('playerHot').get();
-        res.data.forEach(item => {
-          hotCache[item.playerId] = item.hotCount;
-        })
+        const res = await fetch(`${POSTGREST_URL}/playerhot`);
+        if (!res.ok) throw new Error("read hot fail");
+        const list = await res.json();
+        hotCache = {};
+        list.forEach(item => {
+          hotCache[item.playerid] = item.hotcount;
+        });
         renderHotUI();
       } catch (e) {
         console.error("读取热度失败", e);
       }
     }
+
     function renderHotUI() {
       const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
       document.querySelectorAll(".hot-btn-cloud").forEach(btn => {
@@ -866,7 +863,7 @@
       })
     }
 
-    // 【云端点赞，调用云函数】
+    // 【点赞：调用PG rpc addhot】
     async function addHot(playerId, btn) {
       const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
       const now = Date.now();
@@ -876,18 +873,21 @@
       }
       btn.disabled = true;
       try {
-        const res = await app.callFunction({
-          name:"addHot",
-          data:{playerId}
-        })
-        if(res.result.code === 0){
-          hotCache[playerId] = res.result.hot;
-          voteRecord[playerId] = now;
-          localStorage.setItem(STORAGE_VOTE_KEY, JSON.stringify(voteRecord));
-          renderHotUI();
-        }else{
-          alert("点赞失败");
-        }
+        const resp = await fetch(`${POSTGREST_URL}/rpc/addhot`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            playerid: playerId
+          })
+        });
+        if (!resp.ok) throw new Error("rpc fail");
+        const newHot = await resp.json();
+        hotCache[playerId] = newHot;
+        voteRecord[playerId] = now;
+        localStorage.setItem(STORAGE_VOTE_KEY, JSON.stringify(voteRecord));
+        renderHotUI();
       } catch(err){
         console.error("点赞请求异常", err);
         alert("网络异常，请稍后重试");
@@ -937,7 +937,7 @@
         renderPlayers(cfg.players);
         renderMatches(cfg.matches);
         updateCountdown(cfg);
-        await loadAllHot(); // 读完球员数据，拉云端热度
+        await loadAllHot();
       } catch (err) {
         console.error("读取data.json失败", err);
       }
