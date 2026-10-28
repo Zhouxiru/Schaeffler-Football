@@ -18,7 +18,7 @@
     {
       "number": 27,
       "name": "周星泽",
-      "position": "前锋",
+      "position": "中场",
       "birth": "2004-11",
       "minutes": "60'",
       "appear": 1,
@@ -51,7 +51,7 @@
     {
       "number": 11,
       "name": "杨贻杰",
-      "position": "中场",
+      "position": "后卫",
       "birth": "1982-02",
       "minutes": "30'",
       "appear": 1,
@@ -73,7 +73,7 @@
     {
       "number": 58,
       "name": "胡徐旸",
-      "position": "中场",
+      "position": "前锋",
       "birth": "2005-11",
       "minutes": "30'",
       "appear": 1,
@@ -95,7 +95,7 @@
     {
       "number": 23,
       "name": "张宇阳",
-      "position": "后卫",
+      "position": "中场",
       "birth": "1993-08",
       "minutes": "30'",
       "appear": 1,
@@ -139,7 +139,7 @@
     {
       "number": 2,
       "name": "顾叶强",
-      "position": "后卫",
+      "position": "前锋",
       "birth": "2000-11",
       "minutes": "30'",
       "appear": 1,
@@ -150,7 +150,7 @@
     {
       "number": 20,
       "name": "陈波",
-      "position": "中场",
+      "position": "前锋",
       "birth": "1989-11",
       "minutes": "0'",
       "appear": 0,
@@ -161,7 +161,7 @@
     {
       "number": 21,
       "name": "张涛",
-      "position": "中场",
+      "position": "后卫",
       "birth": "1990-06",
       "minutes": "30'",
       "appear": 1,
@@ -172,7 +172,7 @@
     {
       "number": 22,
       "name": "郑晓波",
-      "position": "后卫",
+      "position": "中场",
       "birth": "1987-06",
       "minutes": "0'",
       "appear": 0,
@@ -194,7 +194,7 @@
     {
       "number": 32,
       "name": "张毅峰",
-      "position": "前锋",
+      "position": "后卫",
       "birth": "1997-09",
       "minutes": "0'",
       "appear": 0,
@@ -216,7 +216,7 @@
     {
       "number": 5,
       "name": "蒋棣",
-      "position": "中场",
+      "position": "后卫",
       "birth": "1997-07",
       "minutes": "0'",
       "appear": 0,
@@ -227,7 +227,7 @@
     {
       "number": 6,
       "name": "卢杰",
-      "position": "前锋",
+      "position": "后卫",
       "birth": "2002-10",
       "minutes": "0'",
       "appear": 0,
