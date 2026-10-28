@@ -5,138 +5,6 @@
   },
   "players": [
     {
-      "number": 9,
-      "name": "周希孺",
-      "position": "前锋",
-      "birth": "1997-03",
-      "minutes": "60'",
-      "appear": 1,
-      "goal": 2,
-      "hotKey": "schaeffler-football-zhouxiru",
-      "tag": ""
-    },
-    {
-      "number": 27,
-      "name": "周星泽",
-      "position": "中场",
-      "birth": "2004-11",
-      "minutes": "60'",
-      "appear": 1,
-      "goal": 1,
-      "hotKey": "schaeffler-football-zhouxingze",
-      "tag": ""
-    },
-    {
-      "number": 8,
-      "name": "余彬",
-      "position": "中场",
-      "birth": "2004-11",
-      "minutes": "60'",
-      "appear": 1,
-      "goal": 1,
-      "hotKey": "schaeffler-football-yubin",
-      "tag": ""
-    },
-    {
-      "number": 1,
-      "name": "赵佳",
-      "position": "门将",
-      "birth": "1986-09",
-      "minutes": "60'",
-      "appear": 1,
-      "goal": 0,
-      "hotKey": "schaeffler-football-zhaojia",
-      "tag": ""
-    },
-    {
-      "number": 11,
-      "name": "杨贻杰",
-      "position": "后卫",
-      "birth": "1982-02",
-      "minutes": "30'",
-      "appear": 1,
-      "goal": 0,
-      "hotKey": "schaeffler-football-yangyijie",
-      "tag": ""
-    },
-    {
-      "number": 28,
-      "name": "朱敏",
-      "position": "后卫",
-      "birth": "1986-12",
-      "minutes": "60'",
-      "appear": 1,
-      "goal": 0,
-      "hotKey": "schaeffler-football-zhumin",
-      "tag": ""
-    },
-    {
-      "number": 58,
-      "name": "胡徐旸",
-      "position": "前锋",
-      "birth": "2005-11",
-      "minutes": "30'",
-      "appear": 1,
-      "goal": 0,
-      "hotKey": "schaeffler-football-huxuyang",
-      "tag": ""
-    },
-    {
-      "number": 47,
-      "name": "朱鸣",
-      "position": "前锋",
-      "birth": "1999-09",
-      "minutes": "30'",
-      "appear": 1,
-      "goal": 2,
-      "hotKey": "schaeffler-football-zhuming",
-      "tag": ""
-    },
-    {
-      "number": 23,
-      "name": "张宇阳",
-      "position": "中场",
-      "birth": "1993-08",
-      "minutes": "30'",
-      "appear": 1,
-      "goal": 0,
-      "hotKey": "schaeffler-football-zhangyuyang",
-      "tag": ""
-    },
-    {
-      "number": 12,
-      "name": "刘黎黎",
-      "position": "门将",
-      "birth": "1987-12",
-      "minutes": "0'",
-      "appear": 0,
-      "goal": 0,
-      "hotKey": "schaeffler-football-liulili",
-      "tag": ""
-    },
-    {
-      "number": 14,
-      "name": "潘昊",
-      "position": "中场",
-      "birth": "1997-09",
-      "minutes": "0'",
-      "appear": 0,
-      "goal": 0,
-      "hotKey": "schaeffler-football-panhao",
-      "tag": ""
-    },
-    {
-      "number": 18,
-      "name": "陈诚",
-      "position": "后卫",
-      "birth": "1988-01",
-      "minutes": "0'",
-      "appear": 0,
-      "goal": 0,
-      "hotKey": "schaeffler-football-chencheng",
-      "tag": ""
-    },
-    {
       "number": 2,
       "name": "顾叶强",
       "position": "前锋",
@@ -145,6 +13,28 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-guyeqiang",
+      "tag": ""
+    },
+    {
+      "number": 7,
+      "name": "武阳",
+      "position": "前锋",
+      "birth": "1984-09",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-wuyang",
+      "tag": "领队"
+    },
+    {
+      "number": 9,
+      "name": "周希孺",
+      "position": "前锋",
+      "birth": "1997-03",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 2,
+      "hotKey": "schaeffler-football-zhouxiru",
       "tag": ""
     },
     {
@@ -159,14 +49,47 @@
       "tag": "队长"
     },
     {
-      "number": 21,
-      "name": "张涛",
-      "position": "后卫",
-      "birth": "1990-06",
+      "number": 47,
+      "name": "朱鸣",
+      "position": "前锋",
+      "birth": "1999-09",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 2,
+      "hotKey": "schaeffler-football-zhuming",
+      "tag": ""
+    },
+    {
+      "number": 58,
+      "name": "胡徐旸",
+      "position": "前锋",
+      "birth": "2005-11",
       "minutes": "30'",
       "appear": 1,
       "goal": 0,
-      "hotKey": "schaeffler-football-zhangtao",
+      "hotKey": "schaeffler-football-huxuyang",
+      "tag": ""
+    },
+    {
+      "number": 8,
+      "name": "余彬",
+      "position": "中场",
+      "birth": "2004-11",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 1,
+      "hotKey": "schaeffler-football-yubin",
+      "tag": ""
+    },
+    {
+      "number": 14,
+      "name": "潘昊",
+      "position": "中场",
+      "birth": "1997-09",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-panhao",
       "tag": ""
     },
     {
@@ -181,6 +104,28 @@
       "tag": ""
     },
     {
+      "number": 23,
+      "name": "张宇阳",
+      "position": "中场",
+      "birth": "1993-08",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhangyuyang",
+      "tag": ""
+    },
+    {
+      "number": 27,
+      "name": "周星泽",
+      "position": "中场",
+      "birth": "2004-11",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 1,
+      "hotKey": "schaeffler-football-zhouxingze",
+      "tag": ""
+    },
+    {
       "number": 30,
       "name": "林培",
       "position": "中场",
@@ -189,17 +134,6 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-linpei",
-      "tag": ""
-    },
-    {
-      "number": 32,
-      "name": "张毅峰",
-      "position": "后卫",
-      "birth": "1997-09",
-      "minutes": "0'",
-      "appear": 0,
-      "goal": 0,
-      "hotKey": "schaeffler-football-zhangyifeng",
       "tag": ""
     },
     {
@@ -236,15 +170,59 @@
       "tag": ""
     },
     {
-      "number": 7,
-      "name": "武阳",
-      "position": "前锋",
-      "birth": "1984-09",
+      "number": 11,
+      "name": "杨贻杰",
+      "position": "后卫",
+      "birth": "1982-02",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-yangyijie",
+      "tag": ""
+    },
+    {
+      "number": 18,
+      "name": "陈诚",
+      "position": "后卫",
+      "birth": "1988-01",
       "minutes": "0'",
       "appear": 0,
       "goal": 0,
-      "hotKey": "schaeffler-football-wuyang",
-      "tag": "领队"
+      "hotKey": "schaeffler-football-chencheng",
+      "tag": ""
+    },
+    {
+      "number": 21,
+      "name": "张涛",
+      "position": "后卫",
+      "birth": "1990-06",
+      "minutes": "30'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhangtao",
+      "tag": ""
+    },
+    {
+      "number": 28,
+      "name": "朱敏",
+      "position": "后卫",
+      "birth": "1986-12",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhumin",
+      "tag": ""
+    },
+    {
+      "number": 32,
+      "name": "张毅峰",
+      "position": "后卫",
+      "birth": "1997-09",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhangyifeng",
+      "tag": ""
     },
     {
       "number": 77,
@@ -255,6 +233,28 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-lingchen",
+      "tag": ""
+    },
+    {
+      "number": 1,
+      "name": "赵佳",
+      "position": "门将",
+      "birth": "1986-09",
+      "minutes": "60'",
+      "appear": 1,
+      "goal": 0,
+      "hotKey": "schaeffler-football-zhaojia",
+      "tag": ""
+    },
+    {
+      "number": 12,
+      "name": "刘黎黎",
+      "position": "门将",
+      "birth": "1987-12",
+      "minutes": "0'",
+      "appear": 0,
+      "goal": 0,
+      "hotKey": "schaeffler-football-liulili",
       "tag": ""
     }
   ],
