@@ -418,6 +418,53 @@
       line-height: 1.75;
     }
 
+    /* ===== 球队荣誉板块新增样式 ===== */
+    .honour-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+    .honour-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      padding: 26px;
+      transition: 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+    .honour-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--green-primary);
+    }
+    .honour-card:hover {
+      border-color: var(--border-green);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0, 176, 80, 0.14);
+    }
+    .honour-year {
+      font-size: 13px;
+      color: var(--green-primary);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .honour-name {
+      font-size: 16px;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    .honour-trophy {
+      position: absolute;
+      right: 18px;
+      top: 22px;
+      font-size: 26px;
+      opacity: 0.25;
+    }
+
     /* 位置分组标题 */
     .position-head {
       display: flex;
@@ -654,6 +701,9 @@
       .about-grid {
         grid-template-columns: 1fr;
       }
+      .honour-grid {
+        grid-template-columns: 1fr;
+      }
       .match-item {
         grid-template-columns: 1fr;
         text-align: center;
@@ -704,6 +754,7 @@
     <nav>
       <ul>
         <li><a href="#about">俱乐部</a></li>
+        <li><a href="#honour">球队荣誉</a></li>
         <li><a href="#squad">球员阵容</a></li>
         <li><a href="#matches">赛事赛程</a></li>
         <li><a href="#contact">联系</a></li>
@@ -782,6 +833,36 @@
     </div>
   </section>
 
+  <!-- ===== 新增：球队荣誉板块 ===== -->
+  <section id="honour">
+    <div class="section-head">
+      <h2 class="section-title">球队 <span>荣誉</span></h2>
+      <a href="#" class="section-link">全部荣誉 →</a>
+    </div>
+    <div class="honour-grid">
+      <div class="honour-card">
+        <span class="honour-trophy">🏆</span>
+        <div class="honour-year">2026</div>
+        <div class="honour-name">第八届太仓“中德友谊杯”足球邀请赛-冠军</div>
+      </div>
+      <div class="honour-card">
+        <span class="honour-trophy">🥈</span>
+        <div class="honour-year">2026</div>
+        <div class="honour-name">德甲长三角企业杯足球邀请赛-亚军</div>
+      </div>
+      <div class="honour-card">
+        <span class="honour-trophy">🏆</span>
+        <div class="honour-year">2026</div>
+        <div class="honour-name">“双元制杯”校企五人制足球邀请赛-冠军</div>
+      </div>
+      <div class="honour-card">
+        <span class="honour-trophy">🏆</span>
+        <div class="honour-year">2026</div>
+        <div class="honour-name">西浦创业家学院第三届足球邀请赛-冠军</div>
+      </div>
+    </div>
+  </section>
+
   <section id="squad">
     <div class="section-head">
       <h2 class="section-title">全部 <span>球员</span></h2>
@@ -804,6 +885,7 @@
     </div>
     <div class="footer-links">
       <a href="#about">俱乐部</a>
+      <a href="#honour">球队荣誉</a>
       <a href="#squad">球员</a>
       <a href="#matches">赛程</a>
       <a href="#contact">联系我们</a>
