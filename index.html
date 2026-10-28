@@ -791,6 +791,10 @@
     const STORAGE_VOTE_KEY = 'votedPlayerCloud';
     const VOTE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时防重复
 
+    function urlWithKey(path) {
+      return `${POSTGREST_URL}${path}?apikey=${API_KEY}`;
+    }
+
     // 渲染球员卡片
     function renderPlayers(players) {
       const container = document.getElementById("squadContainer");
@@ -835,19 +839,15 @@
       });
     }
 
-    // 【云端读取全部热度】修复：表字段是 p_id，不是 playerid
+    // 【云端读取全部热度】表字段 p_id, hot
     async function loadAllHot() {
       try {
-        const res = await fetch(`${POSTGREST_URL}/playerhot`, {
-          headers: {
-            "apikey": API_KEY
-          }
-        });
+        const res = await fetch(urlWithKey("/playerhot"));
         if (!res.ok) throw new Error("read hot fail");
         const list = await res.json();
         hotCache = {};
         list.forEach(item => {
-          hotCache[item.p_id] = item.hotcount;
+          hotCache[item.p_id] = item.hot;
         });
         renderHotUI();
       } catch (e) {
@@ -869,7 +869,7 @@
       })
     }
 
-    // 【点赞：调用PG rpc addhot】
+    // 【点赞：调用PG rpc addhot，参数 hotKey】
     async function addHot(playerId, btn) {
       const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
       const now = Date.now();
@@ -879,24 +879,22 @@
       }
       btn.disabled = true;
       try {
-        const resp = await fetch(`${POSTGREST_URL}/rpc/addhot`, {
+        const resp = await fetch(urlWithKey("/rpc/addhot"), {
           method: "POST",
           headers: {
-            "apikey": API_KEY,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            playerid: playerId
+            hotKey: playerId
           })
         });
         if (!resp.ok) throw new Error("rpc fail");
-        const newHot = await resp.json();
-        hotCache[playerId] = newHot;
+        // 刷新热度列表
+        await loadAllHot();
         voteRecord[playerId] = now;
         localStorage.setItem(STORAGE_VOTE_KEY, JSON.stringify(voteRecord));
-        renderHotUI();
       } catch(err){
-        console.error("点赞请求异常", err);
+        console.error("点赞请求异常详情：", err);
         alert("网络异常，请稍后重试");
       } finally {
         btn.disabled = false;
