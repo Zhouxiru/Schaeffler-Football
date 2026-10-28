@@ -440,6 +440,27 @@
       transform: translateY(-5px);
     }
 
+    /* 右上角标签 */
+    .player-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      z-index: 2;
+    }
+    .player-tag[data-tag="队长"] {
+      background: var(--green-primary);
+      color: #041008;
+    }
+    .player-tag[data-tag="领队"] {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+
     .player-number {
       font-size: 40px;
       font-weight: 700;
@@ -452,18 +473,6 @@
       font-size: 17px;
       margin: 8px 0 4px;
       color: var(--text-main);
-      letter-spacing: 1px;
-    }
-
-    .player-tag {
-      display: inline-block;
-      background: var(--green-primary);
-      color: #041008;
-      font-size: 11px;
-      font-weight: bold;
-      padding: 2px 7px;
-      border-radius: 4px;
-      margin: 4px 0 6px;
       letter-spacing: 1px;
     }
 
@@ -778,11 +787,11 @@
       players.forEach(p => {
         const card = document.createElement("div");
         card.className = "player-card";
-        const tagHtml = p.tag ? `<div class="player-tag">${p.tag}</div>` : "";
+        const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
         card.innerHTML = `
+          ${tagHtml}
           <div class="player-number">${p.number}</div>
           <div class="player-name">${p.name}</div>
-          ${tagHtml}
           <div class="player-birth">${p.birth}</div>
           <div class="player-stats">
             <div class="stat-item"><div class="stat-num">${p.minutes}</div><div class="stat-label">时长</div></div>
