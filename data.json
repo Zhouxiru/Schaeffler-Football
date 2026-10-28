@@ -128,7 +128,8 @@
       "minutes": "0'",
       "appear": 0,
       "goal": 0,
-      "hotKey": "schaeffler-football-chenbo"
+      "hotKey": "schaeffler-football-chenbo",
+      "tag": "队长"
     },
     {
       "number": 21,
@@ -200,7 +201,8 @@
       "minutes": "0'",
       "appear": 0,
       "goal": 0,
-      "hotKey": "schaeffler-football-wuyang"
+      "hotKey": "schaeffler-football-wuyang",
+      "tag": "领队"
     },
     {
       "number": 77,
