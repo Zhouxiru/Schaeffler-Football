@@ -455,6 +455,18 @@
       letter-spacing: 1px;
     }
 
+    .player-tag {
+      display: inline-block;
+      background: var(--green-primary);
+      color: #041008;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin: 4px 0 6px;
+      letter-spacing: 1px;
+    }
+
     .player-birth {
       font-size: 12px;
       color: var(--text-muted);
@@ -766,9 +778,11 @@
       players.forEach(p => {
         const card = document.createElement("div");
         card.className = "player-card";
+        const tagHtml = p.tag ? `<div class="player-tag">${p.tag}</div>` : "";
         card.innerHTML = `
           <div class="player-number">${p.number}</div>
           <div class="player-name">${p.name}</div>
+          ${tagHtml}
           <div class="player-birth">${p.birth}</div>
           <div class="player-stats">
             <div class="stat-item"><div class="stat-num">${p.minutes}</div><div class="stat-label">时长</div></div>
@@ -870,5 +884,4 @@
     })
   </script>
 </body>
-
 </html>
