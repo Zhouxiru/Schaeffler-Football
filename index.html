@@ -836,9 +836,9 @@
       const container = document.getElementById("squadContainer");
       container.innerHTML = "";
 
-      // 固定展示顺序
-      const order = ["门将", "后卫", "中场", "前锋"];
-      const groups = { "门将": [], "后卫": [], "中场": [], "前锋": [] };
+      // ✅ 固定展示顺序【前锋 → 中场 → 后卫 → 门将】
+      const order = ["前锋", "中场", "后卫", "门将"];
+      const groups = { "前锋": [], "中场": [], "后卫": [], "门将": [] };
       players.forEach(p => {
         if (groups[p.position]) groups[p.position].push(p);
       });
