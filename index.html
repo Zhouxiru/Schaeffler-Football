@@ -535,14 +535,14 @@
       inset: 0;
       background-size: cover;
       background-position: center top;
-      opacity: 0.45;
+      opacity: 0.85;
       z-index: 0;
-      filter: grayscale(0.3) brightness(0.6);
+      filter: grayscale(0) brightness(1.05) contrast(1.1) saturate(1.2);
       transition: 0.4s;
     }
     .player-card:hover .player-photo-bg {
-      opacity: 0.65;
-      filter: grayscale(0) brightness(0.8);
+      opacity: 1;
+      filter: grayscale(0) brightness(1.15) contrast(1.15) saturate(1.25);
       transform: scale(1.04);
     }
 
@@ -551,6 +551,10 @@
       position:relative;
       z-index:2;
       text-align:center;
+      background: rgba(0, 20, 10, 0.52);
+      padding: 10px 8px;
+      border-radius: 8px;
+      backdrop-filter: blur(2px);
     }
 
     /* 右上角标签 */
