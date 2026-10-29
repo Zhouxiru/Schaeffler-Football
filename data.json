@@ -13,7 +13,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-guyeqiang",
-      "tag": ""
+      "tag": "",
+      "photo": "players/guyeqiang.jpg"
     },
     {
       "number": 7,
@@ -24,7 +25,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-wuyang",
-      "tag": "领队"
+      "tag": "领队",
+      "photo": "players/wuyang.jpg"
     },
     {
       "number": 9,
@@ -35,7 +37,8 @@
       "appear": 1,
       "goal": 2,
       "hotKey": "schaeffler-football-zhouxiru",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhouxiru.jpg"
     },
     {
       "number": 20,
@@ -46,7 +49,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-chenbo",
-      "tag": "队长"
+      "tag": "队长",
+      "photo": "players/chenbo.jpg"
     },
     {
       "number": 47,
@@ -57,7 +61,8 @@
       "appear": 1,
       "goal": 2,
       "hotKey": "schaeffler-football-zhuming",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhuming.jpg"
     },
     {
       "number": 58,
@@ -68,7 +73,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-huxuyang",
-      "tag": ""
+      "tag": "",
+      "photo": "players/huxuyang.jpg"
     },
     {
       "number": 8,
@@ -79,7 +85,8 @@
       "appear": 1,
       "goal": 1,
       "hotKey": "schaeffler-football-yubin",
-      "tag": ""
+      "tag": "",
+      "photo": "players/yubin.jpg"
     },
     {
       "number": 14,
@@ -90,7 +97,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-panhao",
-      "tag": ""
+      "tag": "",
+      "photo": "players/panhao.jpg"
     },
     {
       "number": 22,
@@ -101,7 +109,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-zhengxiaobo",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhengxiaobo.jpg"
     },
     {
       "number": 23,
@@ -112,7 +121,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-zhangyuyang",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhangyuyang.jpg"
     },
     {
       "number": 27,
@@ -123,7 +133,8 @@
       "appear": 1,
       "goal": 1,
       "hotKey": "schaeffler-football-zhouxingze",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhouxingze.jpg"
     },
     {
       "number": 30,
@@ -134,7 +145,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-linpei",
-      "tag": ""
+      "tag": "",
+      "photo": "players/linpei.jpg"
     },
     {
       "number": 4,
@@ -145,7 +157,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-lumin",
-      "tag": ""
+      "tag": "",
+      "photo": "players/lumin.jpg"
     },
     {
       "number": 5,
@@ -156,7 +169,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-jiangdi",
-      "tag": ""
+      "tag": "",
+      "photo": "players/jiangdi.jpg"
     },
     {
       "number": 6,
@@ -167,7 +181,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-lujie",
-      "tag": ""
+      "tag": "",
+      "photo": "players/lujie.jpg"
     },
     {
       "number": 11,
@@ -178,7 +193,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-yangyijie",
-      "tag": ""
+      "tag": "",
+      "photo": "players/yangyijie.jpg"
     },
     {
       "number": 18,
@@ -189,7 +205,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-chencheng",
-      "tag": ""
+      "tag": "",
+      "photo": "players/chencheng.jpg"
     },
     {
       "number": 21,
@@ -200,7 +217,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-zhangtao",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhangtao.jpg"
     },
     {
       "number": 28,
@@ -211,7 +229,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-zhumin",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhumin.jpg"
     },
     {
       "number": 32,
@@ -222,7 +241,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-zhangyifeng",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhangyifeng.jpg"
     },
     {
       "number": 77,
@@ -233,7 +253,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-lingchen",
-      "tag": ""
+      "tag": "",
+      "photo": "players/lingchen.jpg"
     },
     {
       "number": 1,
@@ -244,7 +265,8 @@
       "appear": 1,
       "goal": 0,
       "hotKey": "schaeffler-football-zhaojia",
-      "tag": ""
+      "tag": "",
+      "photo": "players/zhaojia.jpg"
     },
     {
       "number": 12,
@@ -255,7 +277,8 @@
       "appear": 0,
       "goal": 0,
       "hotKey": "schaeffler-football-liulili",
-      "tag": ""
+      "tag": "",
+      "photo": "players/liulili.jpg"
     }
   ],
   "matches": [
