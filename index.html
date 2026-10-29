@@ -520,6 +520,35 @@
       transform: translateY(-5px);
     }
 
+    /* ===== 球员照片背景样式 ===== */
+    .player-photo-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center top;
+      opacity: 0.35;
+      z-index: 0;
+      filter: grayscale(0.4) brightness(0.55);
+      transition: 0.4s;
+    }
+    .player-card:hover .player-photo-bg {
+      opacity: 0.55;
+      filter: grayscale(0.1) brightness(0.7);
+      transform: scale(1.04);
+    }
+
+    /* 卡片内所有文字元素层级提升 */
+    .player-tag,
+    .player-number,
+    .player-name,
+    .player-position,
+    .player-birth,
+    .player-stats,
+    .hot-wrap {
+      position: relative;
+      z-index: 2;
+    }
+
     /* 右上角标签 */
     .player-tag {
       position: absolute;
@@ -953,8 +982,11 @@
           const card = document.createElement("div");
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
+          // 照片兜底：没有photo就用默认图
+          const photoUrl = p.photo || "./player-default.jpg";
           card.innerHTML = `
             ${tagHtml}
+            <div class="player-photo-bg" style="background-image:url('${photoUrl}')"></div>
             <div class="player-number">${p.number}</div>
             <div class="player-name">${p.name}</div>
             <div class="player-position">${p.position}</div>
