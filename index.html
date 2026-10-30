@@ -27,8 +27,17 @@
     }
 
     body {
-      background: var(--bg-deep);
+      background: url("bg-stadium.jpg") center center / cover no-repeat fixed;
       color: var(--text-main);
+      position: relative;
+    }
+    /* 全局暗蒙版，压暗球场背景，文字可读性更好 */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 9, 8, 0.78);
+      z-index: -1;
     }
 
     /* 顶部状态条 */
@@ -506,7 +515,7 @@
     }
 
     .player-card {
-      background: linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.68)), url("stadium-card.jpg") center/cover no-repeat;
+      background: rgba(0,0,0,0.68);
       border: 1px solid var(--border-soft);
       padding: 16px;
       transition: 0.35s;
