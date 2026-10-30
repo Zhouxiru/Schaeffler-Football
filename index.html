@@ -27,9 +27,16 @@
     }
 
     body {
-      background: url("bg-stadium.jpg") center center / cover no-repeat fixed;
       color: var(--text-main);
       position: relative;
+      background: transparent;
+    }
+    /* 独立固定球场背景层，移动端稳定fixed */
+    .bg-stadium-layer{
+      position: fixed;
+      inset:0;
+      background: url("bg-stadium.jpg") center center / cover no-repeat;
+      z-index:-2;
     }
     /* 全局暗蒙版，压暗球场背景，文字可读性更好 */
     body::before {
@@ -807,6 +814,9 @@
 </head>
 
 <body>
+  <!-- 独立固定球场背景层 -->
+  <div class="bg-stadium-layer"></div>
+
   <div class="top-bar">
     <span><span class="status-dot"></span>CLUB STATUS：ACTIVE</span>
     <span>太仓港国际货运杯 · 2026赛季</span>
