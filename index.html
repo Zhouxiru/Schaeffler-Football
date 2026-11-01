@@ -1052,7 +1052,7 @@
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
           // 照片兜底：没有photo就用默认图
-          const photoBase = p.photo ? `./players/${p.photo}` : "./player-default";
+          const photoBase = p.photo ? `./players/${p.photo}` : "./players/player-default";
           card.innerHTML = `
             ${tagHtml}
             <div class="player-photo-wrap" data-src="${photoBase}">
