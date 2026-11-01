@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>舍弗勒足球俱乐部 | 官网</title>
-  <!-- 预加载球场背景大图，提升首屏 -->
-  <link rel="preload" href="bg-stadium.jpg" as="image" imagesrcset="bg-stadium.jpg" imagesizes="100vw">
+  <!-- 只预加载首屏核心背景，其他全部懒加载 -->
+  <link rel="preload" href="bg-stadium.webp" as="image" imagesrcset="bg-stadium.webp" imagesizes="100vw">
   <style>
     * {
       margin: 0;
@@ -37,7 +37,7 @@
     .bg-stadium-layer{
       position: fixed;
       inset:0;
-      background: url("bg-stadium.jpg") center center / cover no-repeat;
+      background: url("bg-stadium.webp") center center / cover no-repeat;
       z-index:-2;
     }
     /* 全局暗蒙版，压暗球场背景，文字可读性更好 */
@@ -561,7 +561,6 @@
       filter: grayscale(0) brightness(1.05) contrast(1.1) saturate(1.2);
       transition: 0.4s;
       box-shadow: inset 0 0 65px rgba(0, 0, 0, 0.52);
-      /* 初始空白，等待懒加载 */
       background-image: none !important;
     }
     .player-photo-wrap::after{
@@ -833,7 +832,7 @@
   <header>
     <div class="club-brand">
       <div class="crest">
-        <img src="logo.png" alt="舍弗勒足球俱乐部队标" />
+        <img src="logo.webp" alt="舍弗勒足球俱乐部队标" loading="eager" />
       </div>
       <div class="club-name">
         舍弗勒足球俱乐部
@@ -892,7 +891,7 @@
       <h2 class="section-title">近期 <span>赛事留念</span></h2>
       <span class="photo-note">第八届太仓“中德友谊杯”足球邀请赛-冠军</span>
     </div>
-    <img src="team-photo.jpg" alt="舍弗勒足球俱乐部｜第八届太仓“中德友谊杯”足球邀请赛冠军合照" />
+    <img src="team-photo.webp" alt="舍弗勒足球俱乐部｜第八届太仓“中德友谊杯”足球邀请赛冠军合照" />
   </div>
 
   <section id="about">
@@ -981,13 +980,14 @@
     </div>
   </footer>
 
-  <script>
+  <script defer>
     // =========【这里改成你的TCB PostgREST地址 + 匿名apikey】=========
     const POSTGREST_URL = "https://schaeffler-football-d4bib37af266.api.shanghai.tcb-api.tencentcloudapi.com/v1/rdb/rest";
     const API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyNzcyY2YxLTRkOGYtNGIzYi1hOTc3LTU0MjU0YWI5YzEyMSJ9.eyJpc3MiOiJodHRwczovL3NjaGFlZmZsZXItZm9vdGJhbGwtZDRiaWIzN2FmMjY2LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsImV4cCI6NDA5Njg3ODc1MywiaWF0IjoxNzkzMTk1NTUzLCJub25jZSI6InEwZTlhTi1vVGJlTGM4ZTJLcGNET3ciLCJhdF9oYXNoIjoicTBlOWFOLW9UYmVMYzhlMktwY0RPdyIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.GLUOTVpBogI--Tb_NvOSxoSKpZ2YVkNk6SLORhBwIhSemNoIKHGjgJ8csfTc8cnPqmSQww47QNL5B2MLRSlpWE4nFJlzJZh1cuSt73j8VT1YVpFe6WwB_iTrdVeOP0d6hYdM_ECamPZDnfRYdFc65WbpxssChFnOUSP_cH-jjBT0PaJohlczoFPceWKJOvlYz-jsX4V7mcture5o4a47oHTO7YVp5CniZ7jSby7JC6sePiNe01i_BK5FJIS7q0k011er1zdQngXuMxuViVJmt_QFLohsaKAAksFiAewJtrKdf349gKnhqsP5lR6zCfbsFTu-pO4e7kyE1WHhi3iq3g";
 
     const FETCH_INTERVAL = 60 * 1000;
     let timer = null;
+    let cachedPlayerData = null;
     // 热度缓存
     let hotCache = {};
     const STORAGE_VOTE_KEY = 'votedPlayerCloud';
@@ -1000,7 +1000,6 @@
           const wrap = entry.target;
           const bgDom = wrap.querySelector(".player-photo-bg");
           const src = wrap.dataset.src;
-          // 优先webp，失败回退jpg
           const imgTest = new Image();
           imgTest.src = src + ".webp";
           imgTest.onload = ()=>{
@@ -1140,7 +1139,6 @@
       }
       btn.disabled = true;
       try {
-        // ✅ 重点修复：参数名改成 playerid，和PG函数参数完全一致
         const resp = await fetch(`${POSTGREST_URL}/rpc/addhot`, {
           method: "POST",
           headers: getHeaders(),
@@ -1195,23 +1193,27 @@
 
     async function fetchAllData() {
       try {
-        const res = await fetch(`./data.json?t=${Date.now()}`);
+        const res = await fetch(`./data.json`, { cache: "no-cache" });
         if (!res.ok) throw new Error("json fetch fail");
         const cfg = await res.json();
+        cachedPlayerData = cfg;
         renderPlayers(cfg.players);
         renderMatches(cfg.matches);
         updateCountdown(cfg);
         await loadAllHot();
       } catch (err) {
         console.error("读取data.json失败", err);
+        if(cachedPlayerData){
+          renderPlayers(cachedPlayerData.players);
+          renderMatches(cachedPlayerData.matches);
+          updateCountdown(cachedPlayerData);
+        }
       }
     }
 
     // 页面加载执行
-    window.addEventListener("load", ()=>{
-      fetchAllData();
-      timer = setInterval(fetchAllData, FETCH_INTERVAL);
-    })
+    fetchAllData();
+    timer = setInterval(fetchAllData, FETCH_INTERVAL);
   </script>
 
 </body>
