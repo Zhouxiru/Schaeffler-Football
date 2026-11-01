@@ -1051,7 +1051,7 @@
           const card = document.createElement("div");
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
-          // 照片兜底：没有photo就用默认图
+          // ========== 修复：默认图路径修正到players文件夹 ==========
           const photoBase = p.photo ? `./players/${p.photo}` : "./players/player-default";
           card.innerHTML = `
             ${tagHtml}
