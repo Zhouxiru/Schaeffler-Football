@@ -1,0 +1,6 @@
+/*.webp
+  Cache-Control: public, max-age=2592000
+/*.json
+  Cache-Control: public, max-age=30
+/*.html
+  Cache-Control: no-cache
