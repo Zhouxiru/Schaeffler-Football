@@ -993,7 +993,7 @@
     const STORAGE_VOTE_KEY = 'votedPlayerCloud';
     const VOTE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时防重复
 
-    // 懒加载观察者
+        // 懒加载观察者（增强兜底：webp → jpg → 默认图）
     const photoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){
@@ -1006,12 +1006,22 @@
             bgDom.style.backgroundImage = `url(${src}.webp)`;
           }
           imgTest.onerror = ()=>{
-            bgDom.style.backgroundImage = `url(${src}.jpg)`;
+            // webp加载失败，尝试jpg
+            const imgJpg = new Image();
+            imgJpg.src = src + ".jpg";
+            imgJpg.onload = ()=>{
+              bgDom.style.backgroundImage = `url(${src}.jpg)`;
+            }
+            imgJpg.onerror = ()=>{
+              // jpg也找不到，强制加载默认头像
+              bgDom.style.backgroundImage = `url(./players/player-default.webp)`;
+            }
           }
           photoObserver.unobserve(wrap);
         }
       })
     }, {rootMargin: "120px 0px"});
+
 
     // 统一请求头（apikey放在header，TCB标准用法）
     function getHeaders() {
