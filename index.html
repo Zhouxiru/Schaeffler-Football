@@ -2,11 +2,13 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#00B050">
   <title>舍弗勒足球俱乐部 | 官网</title>
-  <!-- 只预加载首屏核心背景，其他全部懒加载 -->
+  <!-- 只预加载首屏球场背景，其他图片一律不预加载，移动端优先保障骨架渲染 -->
   <link rel="preload" href="bg-stadium.webp" as="image" imagesrcset="bg-stadium.webp" imagesizes="100vw">
   <style>
+    /* 这里你原来全部CSS原样保留，不要改动 */
     * {
       margin: 0;
       padding: 0;
@@ -1059,10 +1061,10 @@
     </div>
   </footer>
 
-  <script defer>
+   <script>
     // =========【这里改成你的TCB PostgREST地址 + 匿名apikey】=========
     const POSTGREST_URL = "https://schaeffler-football-d4bib37af266.api.shanghai.tcb-api.tencentcloudapi.com/v1/rdb/rest";
-    const API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyNzcyY2YxLTRkOGYtNGIzYi1hOTc3LTU0MjU0YWI5YzEyMSJ9.eyJpc3MiOiJodHRwczovL3NjaGFlZmZsZXItZm9vdGJhbGwtZDRiaWIzN2FmMjY2LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsImV4cCI6NDA5Njg3ODc1MywiaWF0IjoxNzkzMTk1NTUzLCJub25jZSI6InEwZTlhTi1vVGJlTGM4ZTJLcGNET3ciLCJhdF9oYXNoIjoicTBlOWFOLW9UYmVMYzhlMktwY0RPdyIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.GLUOTVpBogI--Tb_NvOSxoSKpZ2YVkNk6SLORhBwIhSemNoIKHGjgJ8csfTc8cnPqmSQww47QNL5B2MLRSlpWE4nFJlzJZh1cuSt73j8VT1YVpFe6WwB_iTrdVeOP0d6hYdM_ECamPZDnfRYdFc65WbpxssChFnOUSP_cH-jjBT0PaJohlczoFPceWKJOvlYz-jsX4V7mcture5o4a47oHTO7YVp5CniZ7jSby7JC6sePiNe01i_BK5FJIS7q0k011er1zdQngXuMxuViVJmt_QFLohsaKAAksFiAewJtrKdf349gKnhqsP5lR6zCfbsFTu-pO4e7kyE1WHhi3iq3g";
+    const API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyNzcyY2YxLTRkOGYtNGIzYi1hOTc3LTU0MjU0YWI5YzEyMSJ9.eyJpc3MiOiJodHRwczovL3NjaGFlZmZsZXItZm9vdGJhbGwtZDRiaWIzN2FmMjY2LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsImV4cCI6NDA5Njg3ODc1MywiaWF0IjoxNzkzMTk1NTUzLCJub25jZSI6InEwZTlhTi1vVGJlTGM4ZTJLcGNET3ciLCJhdF9oYXNoIjoicTBlOWFOLW9UYmVMYzhlMktwY0RPdyIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJzY2hhZWZmbGVyLWQ0YmliMzdhZjI2NiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.GLUOTVpBogI--Tb_NvOSxoSKpZ2YVkNk6SLORhBwIhSemNoIKHGjgJ8csfTc8cnPqmSQww47QNL5B2MLRSlpWE4nFJlzJZh1cuSt73j8VT1YVpFe6WwB_iTrdVeOP0d6hYdM_ECamPZDnfRYdFc65WbpxssChFnOUSP_cH-jjBT0PaJohlczoFPceWKJOvlYz-jsX4V7mcture5o4a47oHTO7YVp5CniZ7jSby7JC6sePiNe01i_BK5FJIS7q0k011er1zdQngXuMxuViVJmt_QFLohsaKAAksFiAewJtrKdf349gKnhqsP5lR6zCfbsFTu-pO4e7kyE1WHhi3iq3g";
 
     const FETCH_INTERVAL = 60 * 1000;
     let timer = null;
@@ -1072,7 +1074,7 @@
     const STORAGE_VOTE_KEY = 'votedPlayerCloud';
     const VOTE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时防重复
 
-        // 懒加载观察者（增强兜底：webp → jpg → 默认图）
+    // 【移动端优化：提前初始化观察者，rootMargin 150px 滚动预加载】
     const photoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){
@@ -1083,6 +1085,7 @@
           imgTest.src = src + ".webp";
           imgTest.onload = ()=>{
             bgDom.style.backgroundImage = `url(${src}.webp)`;
+            console.log("加载成功 webp:", src);
           }
           imgTest.onerror = ()=>{
             // webp加载失败，尝试jpg
@@ -1090,16 +1093,18 @@
             imgJpg.src = src + ".jpg";
             imgJpg.onload = ()=>{
               bgDom.style.backgroundImage = `url(${src}.jpg)`;
+              console.log("降级 jpg:", src);
             }
             imgJpg.onerror = ()=>{
               // jpg也找不到，强制加载默认头像
               bgDom.style.backgroundImage = `url(./players/player-default.webp)`;
+              console.warn("图片全部失败，兜底默认图：", src);
             }
           }
           photoObserver.unobserve(wrap);
         }
       })
-    }, {rootMargin: "120px 0px"});
+    }, {rootMargin: "150px 0px", threshold: 0.01});
 
 
     // 统一请求头（apikey放在header，TCB标准用法）
@@ -1140,7 +1145,6 @@
           const card = document.createElement("div");
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
-          // ========== 修复：默认图路径修正到players文件夹 ==========
           const photoBase = p.photo ? `./players/${p.photo}` : "./players/player-default";
           card.innerHTML = `
             ${tagHtml}
@@ -1281,6 +1285,8 @@
     }
 
     async function fetchAllData() {
+      // 页面隐藏时，不请求，节省移动端流量
+      if (document.hidden) return;
       try {
         const res = await fetch(`./data.json`, { cache: "no-cache" });
         if (!res.ok) throw new Error("json fetch fail");
@@ -1300,10 +1306,31 @@
       }
     }
 
-    // 页面加载执行
-    fetchAllData();
-    timer = setInterval(fetchAllData, FETCH_INTERVAL);
+    // 【核心优化：浏览器空闲后再拉取球员数据，不抢占首屏渲染】
+    function lazyLoadData() {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(fetchAllData);
+      } else {
+        window.addEventListener('load', fetchAllData, { once: true });
+      }
+    }
+    lazyLoadData();
+
+    // 轮询，页面隐藏自动暂停
+    timer = setInterval(()=>{
+      if(!document.hidden){
+        fetchAllData();
+      }
+    }, FETCH_INTERVAL);
+
+    // 页面切后台/前台监听
+    document.addEventListener("visibilitychange", ()=>{
+      if(!document.hidden && !cachedPlayerData){
+        fetchAllData();
+      }
+    })
   </script>
+
 
 </body>
 </html>
