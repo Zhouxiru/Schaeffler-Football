@@ -1260,29 +1260,39 @@
     }
 
     // 更新倒计时
-    function updateCountdown(cfg) {
-      const matchTime = new Date(cfg.nextMatch.matchTime);
-      const tipText = cfg.nextMatch.matchTip;
-      const now = new Date();
-      const diff = matchTime - now;
+function updateCountdown(cfg) {
+  const matchTime = new Date(cfg.nextMatch.matchTime);
+  const tipText = cfg.nextMatch.matchTip;
+  const now = new Date();
+  const diff = matchTime - now;
 
-      if (diff <= 0) {
-        document.querySelector(".countdown-box").style.display = "none";
-        document.getElementById("match-tip").innerText = tipText;
-        return;
-      } else {
-        document.querySelector(".countdown-box").style.display = "flex";
-      }
+  const weekArr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+  const y = matchTime.getFullYear();
+  const m = String(matchTime.getMonth() + 1).padStart(2, "0");
+  const d = String(matchTime.getDate()).padStart(2, "0");
+  const w = weekArr[matchTime.getDay()];
+  const hh = String(matchTime.getHours()).padStart(2, "0");
+  const mm = String(matchTime.getMinutes()).padStart(2, "0");
+  const fullTimeStr = `${y}-${m}-${d} ${w} ${hh}:${mm}`;
 
-      const day = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const min = Math.floor((diff / (1000 * 60)) % 60);
+  if (diff <= 0) {
+    document.querySelector(".countdown-box").style.display = "none";
+    document.getElementById("match-tip").innerText = `${fullTimeStr} | ${tipText}`;
+    return;
+  } else {
+    document.querySelector(".countdown-box").style.display = "flex";
+  }
 
-      document.getElementById("day").innerText = String(day).padStart(2, "0");
-      document.getElementById("hour").innerText = String(hour).padStart(2, "0");
-      document.getElementById("min").innerText = String(min).padStart(2, "0");
-      document.getElementById("match-tip").innerText = tipText;
-    }
+  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const min = Math.floor((diff / (1000 * 60)) % 60);
+
+  document.getElementById("day").innerText = String(day).padStart(2, "0");
+  document.getElementById("hour").innerText = String(hour).padStart(2, "0");
+  document.getElementById("min").innerText = String(min).padStart(2, "0");
+  document.getElementById("match-tip").innerText = `${fullTimeStr} | ${tipText}`;
+}
+
 
     async function fetchAllData() {
       // 页面隐藏时，不请求，节省移动端流量
