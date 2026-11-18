@@ -17,6 +17,18 @@
       "photo": "guyeqiang"
     },
     {
+  "name": "周翼",
+  "number": "3",
+  "position": "前锋",
+  "birth": "1987-03",
+  "photo": "zhouyi",
+  "minutes": 0,
+  "appear": 0,
+  "goal": 0,
+  "hotKey": "zhouyi",
+  "tag": ""
+},
+    {
       "number": 7,
       "name": "武阳",
       "position": "前锋",
