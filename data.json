@@ -317,6 +317,19 @@
       "photo": "wangcheng"
     },
     {
+  "name": "刘清",
+  "number": "17",
+  "position": "后卫",
+  "birth": "1981-06",
+  "photo": "liuqing",
+  "minutes": 0,
+  "appear": 0,
+  "goal": 0,
+  "hotKey": "liuqing",
+  "tag": ""
+},
+
+    {
       "number": 19,
       "name": "周亿宁",
       "position": "后卫",
