@@ -184,7 +184,7 @@
       width: 100%;
     }
 
-/* ========== 下场比赛倒计时模块（去掉秒 + 内部绿光呼吸） ========== */
+/* ========== 下场比赛倒计时模块｜加强版同步绿光呼吸 ========== */
 .match-countdown {
   background: #141a18;
   border: 1px solid var(--border-green);
@@ -192,14 +192,14 @@
   padding: 20px;
   margin: 24px 6%;
   text-align: center;
-  animation: borderBreathe 2.2s ease-in-out infinite alternate;
+  animation: cardBreathe 2.2s ease-in-out infinite alternate;
 }
-@keyframes borderBreathe {
+@keyframes cardBreathe {
   0% {
-    box-shadow: 0 0 4px rgba(0,176,80,0.2);
+    box-shadow: 0 0 6px rgba(0,176,80,0.25);
   }
   100% {
-    box-shadow: 0 0 20px rgba(0,176,80,0.55);
+    box-shadow: 0 0 26px rgba(0,176,80,0.6);
   }
 }
 .countdown-title {
@@ -220,12 +220,22 @@
   padding: 12px 16px;
   border-radius: 6px;
   min-width: 70px;
+  animation: blockBreathe 2.2s ease-in-out infinite alternate;
+}
+@keyframes blockBreathe {
+  0% {
+    box-shadow: 0 0 3px rgba(0,176,80,0.18);
+  }
+  100% {
+    box-shadow: 0 0 14px rgba(0,176,80,0.45);
+  }
 }
 .time-item span {
   display: block;
   font-size: 32px;
   color: var(--green-primary);
   font-weight: bold;
+  text-shadow: 0 0 8px rgba(0,176,80,0.35);
 }
 .time-item label {
   color: var(--text-muted);
@@ -238,6 +248,7 @@
   color:var(--text-muted);
   font-size:14px;
 }
+
 
 
     /* 主视觉 Banner */
