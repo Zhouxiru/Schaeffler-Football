@@ -193,13 +193,14 @@
   margin: 24px 6%;
   text-align: center;
   animation: cardBreathe 2.2s ease-in-out infinite alternate;
+  will-change: box-shadow;
 }
 @keyframes cardBreathe {
   0% {
-    box-shadow: 0 0 6px rgba(0,176,80,0.25);
+    box-shadow: 0 0 6px rgba(0,176,80,0.25), 0 0 12px rgba(0,176,80,0.12);
   }
   100% {
-    box-shadow: 0 0 26px rgba(0,176,80,0.6);
+    box-shadow: 0 0 36px rgba(0,176,80,0.75), 0 0 60px rgba(0,176,80,0.35);
   }
 }
 .countdown-title {
@@ -221,13 +222,14 @@
   border-radius: 6px;
   min-width: 70px;
   animation: blockBreathe 2.2s ease-in-out infinite alternate;
+  will-change: box-shadow;
 }
 @keyframes blockBreathe {
   0% {
-    box-shadow: 0 0 3px rgba(0,176,80,0.18);
+    box-shadow: 0 0 3px rgba(0,176,80,0.18), inset 0 0 4px rgba(0,176,80,0.05);
   }
   100% {
-    box-shadow: 0 0 14px rgba(0,176,80,0.45);
+    box-shadow: 0 0 20px rgba(0,176,80,0.55), inset 0 0 10px rgba(0,176,80,0.12);
   }
 }
 .time-item span {
@@ -235,7 +237,7 @@
   font-size: 32px;
   color: var(--green-primary);
   font-weight: bold;
-  text-shadow: 0 0 8px rgba(0,176,80,0.35);
+  text-shadow: 0 0 12px rgba(0,176,80,0.45);
 }
 .time-item label {
   color: var(--text-muted);
@@ -1085,143 +1087,101 @@
     let timer = null;
     let cachedPlayerData = null;
 
-    // iine.to 共享点赞接口配置
+    // iine.to 共享点赞接口
     const IINE_SUPABASE_URL = "https://vhiweeypifbwacashxjz.supabase.co/rest/v1";
     const IINE_API_KEY = "sb_publishable_EoB7MFJhCmb6PiAk-GPJ4w_PGhQ44Ru";
 
-    // 获取访客唯一ID
     function getVisitorId() {
-      let vid = localStorage.getItem("iine_visitor_id");
+      let vid = localStorage.getItem("visitor_id");
       if (!vid) {
         vid = Math.random().toString(36).slice(2);
-        localStorage.setItem("iine_visitor_id", vid);
+        localStorage.setItem("visitor_id", vid);
       }
       return vid;
     }
     const visitorId = getVisitorId();
 
-    // 读取云端点赞数
-    async function getIineCount(slug) {
+    async function getLikeCount(slug) {
       try {
-        const res = await fetch(`${IINE_SUPABASE_URL}/rpc/get_hits?apikey=${IINE_API_KEY}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ page_slug: slug })
+        const res = await fetch(`${IINE_SUPABASE_URL}/likes?slug=eq.${slug}&select=count`, {
+          headers: { apikey: IINE_API_KEY }
         });
-        const num = await res.json();
-        const val = Number(num) || 0;
-        localStorage.setItem(`iine_cache_${slug}`, val);
-        return val;
-      } catch (e) {
-        console.warn("iine读取失败，使用本地缓存", slug, e);
-        const cache = localStorage.getItem(`iine_cache_${slug}`);
-        return cache ? Number(cache) : 0;
+        const json = await res.json();
+        return json[0]?.count ?? 0;
+      } catch(e) {
+        return Number(localStorage.getItem(`like_cache_${slug}`) || 0);
       }
     }
 
-    // 点赞+1
-    async function addIineLike(slug) {
-      const likedSet = JSON.parse(localStorage.getItem("iine_liked_set") || "[]");
-      if (likedSet.includes(slug)) return false;
-
+    async function toggleLike(slug) {
+      const key = `liked_${slug}`;
+      let arr = JSON.parse(localStorage.getItem(key) || "[]");
+      if(arr.includes(visitorId)) return false;
+      arr.push(visitorId);
+      localStorage.setItem(key, JSON.stringify(arr));
       try {
-        const res = await fetch(`${IINE_SUPABASE_URL}/rpc/increment_hits?apikey=${IINE_API_KEY}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ page_slug: slug })
-        });
-        if (res.ok) {
-          likedSet.push(slug);
-          localStorage.setItem("iine_liked_set", JSON.stringify(likedSet));
-          const newNum = await getIineCount(slug);
-          return newNum;
-        }
-      } catch (e) {
-        console.warn("iine点赞提交失败", e);
-      }
-      return false;
+        await fetch(`${IINE_SUPABASE_URL}/likes`, {
+          method:"POST",
+          headers: { apikey: IINE_API_KEY, "Content-Type":"application/json" },
+          body: JSON.stringify({slug, visitor_id:visitorId})
+        })
+      }catch(e){}
+      return true;
     }
 
-    // 渲染热度、绑定点击事件
-    async function renderPlayerHot(player, hotDom) {
-      hotDom.textContent = "加载中...";
-      const count = await getIineCount(player.hotKey);
-      hotDom.textContent = `🔥 热度 ${count}`;
-      hotDom.dataset.slug = player.hotKey;
-
-      const likedSet = JSON.parse(localStorage.getItem("iine_liked_set") || "[]");
-      if (likedSet.includes(player.hotKey)) {
-        hotDom.classList.add("liked");
+    async function renderHotBtn(player, btn) {
+      const count = await getLikeCount(player.hotKey);
+      btn.textContent = `🔥 热度 ${count}`;
+      if(JSON.parse(localStorage.getItem(`liked_${player.hotKey}`) || "[]").includes(visitorId)){
+        btn.classList.add("liked");
       }
-
-      hotDom.onclick = async () => {
-        const newVal = await addIineLike(player.hotKey);
-        if (newVal !== false) {
-          hotDom.textContent = `🔥 热度 ${newVal}`;
-          hotDom.classList.add("liked");
+      btn.onclick = async () => {
+        const ok = await toggleLike(player.hotKey);
+        if(ok){
+          const newCnt = await getLikeCount(player.hotKey);
+          btn.textContent = `🔥 热度 ${newCnt}`;
+          btn.classList.add("liked");
         }
-      };
+      }
     }
 
-    // 【移动端优化：提前初始化观察者，rootMargin 150px 滚动预加载】
-    const photoObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          const wrap = entry.target;
-          const bgDom = wrap.querySelector(".player-photo-bg");
+    const photoObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          const wrap = e.target;
+          const bg = wrap.querySelector(".player-photo-bg");
           const src = wrap.dataset.src;
-          const imgTest = new Image();
-          imgTest.src = src + ".webp";
-          imgTest.onload = ()=>{
-            bgDom.style.backgroundImage = `url(${src}.webp)`;
-            console.log("加载成功 webp:", src);
-          }
-          imgTest.onerror = ()=>{
-            // webp加载失败，尝试jpg
-            const imgJpg = new Image();
-            imgJpg.src = src + ".jpg";
-            imgJpg.onload = ()=>{
-              bgDom.style.backgroundImage = `url(${src}.jpg)`;
-              console.log("降级 jpg:", src);
-            }
-            imgJpg.onerror = ()=>{
-              // jpg也找不到，强制加载默认头像
-              bgDom.style.backgroundImage = `url(./players/player-default.webp)`;
-              console.warn("图片全部失败，兜底默认图：", src);
-            }
+          const img = new Image();
+          img.src = src + ".webp";
+          img.onload = ()=>{ bg.style.backgroundImage = `url(${src}.webp)`; };
+          img.onerror = ()=>{
+            const jpg = new Image();
+            jpg.src = src + ".jpg";
+            jpg.onload = ()=> bg.style.backgroundImage = `url(${src}.jpg)`;
+            jpg.onerror = ()=> bg.style.backgroundImage = `url(./players/player-default.webp)`;
           }
           photoObserver.unobserve(wrap);
         }
       })
-    }, {rootMargin: "150px 0px", threshold: 0.01});
+    }, {rootMargin:"150px 0px", threshold:0.01});
 
-
-    // 渲染球员卡片：按位置分组渲染
-    function renderPlayers(players) {
-      const container = document.getElementById("squadContainer");
-      container.innerHTML = "";
-
-      // ✅ 固定展示顺序【前锋 → 中场 → 后卫 → 门将】
-      const order = ["前锋", "中场", "后卫", "门将"];
-      const groups = { "前锋": [], "中场": [], "后卫": [], "门将": [] };
-      players.forEach(p => {
-        if (groups[p.position]) groups[p.position].push(p);
-      });
-
-      order.forEach(pos => {
-        const list = groups[pos];
-        if (!list || list.length === 0) return;
-
-        // 位置标题
-        const head = document.createElement("div");
-        head.className = "position-head";
-        head.innerHTML = `<span class="position-name">${pos}</span><span class="position-count">${list.length} 人</span>`;
-        container.appendChild(head);
-
-        // 本组球员网格
-        const grid = document.createElement("div");
-        grid.className = "squad-grid";
-        list.forEach(p => {
+    function renderPlayers(list) {
+      const box = document.getElementById("squadContainer");
+      box.innerHTML = "";
+      const order = ["前锋","中场","后卫","门将"];
+      const group = {};
+      order.forEach(p=>group[p]=[]);
+      list.forEach(p=>{ if(group[p.position]) group[p.position].push(p); });
+      order.forEach(pos=>{
+        const arr = group[pos];
+        if(!arr.length) return;
+        const h = document.createElement("div");
+        h.className = "position-head";
+        h.innerHTML = `<span class="position-name">${pos}</span><span class="position-count">${arr.length}人</span>`;
+        box.appendChild(h);
+        const g = document.createElement("div");
+        g.className = "squad-grid";
+        arr.forEach(p=>{
           const card = document.createElement("div");
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
@@ -1242,26 +1202,24 @@
                 <div class="stat-item"><div class="stat-num">${p.goal}</div><div class="stat-label">进球</div></div>
               </div>
               <div class="hot-wrap" style="margin-top:10px;">
-                <button class="hot-btn"></button>
+                <button class="hot-btn">加载中...</button>
               </div>
             </div>
           `;
-          grid.appendChild(card);
-          // 拿到热度DOM，绑定iine共享点赞
-          const hotBtn = card.querySelector(".hot-btn");
-          renderPlayerHot(p, hotBtn);
+          g.appendChild(card);
+          const btn = card.querySelector(".hot-btn");
+          renderHotBtn(p, btn);
+          const wrap = card.querySelector(".player-photo-wrap");
+          photoObserver.observe(wrap);
         })
-        container.appendChild(grid);
+        box.appendChild(g);
       })
-      // 绑定懒加载
-      document.querySelectorAll(".player-photo-wrap").forEach(w=>photoObserver.observe(w));
     }
 
-    // 渲染赛程
-    function renderMatches(matches) {
-      const container = document.getElementById("matchContainer");
-      container.innerHTML = "";
-      matches.forEach(m => {
+    function renderMatches(list) {
+      const c = document.getElementById("matchContainer");
+      c.innerHTML = "";
+      list.forEach(m=>{
         const item = document.createElement("div");
         item.className = "match-item";
         item.innerHTML = `
@@ -1270,78 +1228,61 @@
           <div class="match-result"><span class="score">${m.score}</span></div>
           <div class="match-place">${m.place}</div>
         `;
-        container.appendChild(item);
-      });
+        c.appendChild(item);
+      })
     }
 
-// 更新倒计时
-function updateCountdown(cfg) {
-  const matchTime = new Date(cfg.nextMatch.matchTime);
-  const tipText = cfg.nextMatch.matchTip;
-  const now = new Date();
-  const diff = matchTime - now;
+    function updateCountdown(cfg) {
+      const target = new Date(cfg.nextMatch.matchTime);
+      const now = new Date();
+      const diff = target - now;
+      const tipEl = document.getElementById("match-tip");
+      const dayEl = document.getElementById("day");
+      const hourEl = document.getElementById("hour");
+      const minEl = document.getElementById("min");
 
-  const weekArr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
-  const y = matchTime.getFullYear();
-  const m = String(matchTime.getMonth() + 1).padStart(2, "0");
-  const d = String(matchTime.getDate()).padStart(2, "0");
-  const w = weekArr[matchTime.getDay()];
-  const hh = String(matchTime.getHours()).padStart(2, "0");
-  const mm = String(matchTime.getMinutes()).padStart(2, "0");
-  const fullTimeStr = `${y}-${m}-${d} ${w} ${hh}:${mm}`;
+      const weekArr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+      const y = target.getFullYear();
+      const m = String(target.getMonth()+1).padStart(2,"0");
+      const d = String(target.getDate()).padStart(2,"0");
+      const w = weekArr[target.getDay()];
+      const hh = String(target.getHours()).padStart(2,"0");
+      const mm = String(target.getMinutes()).padStart(2,"0");
+      const tipText = `${y}-${m}-${d} ${w} ${hh}:${mm}<br>${cfg.nextMatch.matchTip}`;
 
-  if (diff <= 0) {
-    document.querySelector(".countdown-box").style.display = "none";
-    document.getElementById("match-tip").innerHTML = `${fullTimeStr}<br>${tipText}`;
-    return;
-  } else {
-    document.querySelector(".countdown-box").style.display = "flex";
-  }
+      if(diff <= 0) {
+        document.querySelector(".countdown-box").style.display = "none";
+        tipEl.innerHTML = tipText;
+        return;
+      } else {
+        document.querySelector(".countdown-box").style.display = "flex";
+      }
+      const day = Math.floor(diff / (1000*60*60*24));
+      const rem = diff % (1000*60*60*24);
+      const hour = Math.floor(rem / (1000*60*60));
+      const rem2 = rem % (1000*60*60);
+      const min = Math.floor(rem2 / (1000*60));
+      dayEl.innerText = String(day).padStart(2,"0");
+      hourEl.innerText = String(hour).padStart(2,"0");
+      minEl.innerText = String(min).padStart(2,"0");
+      tipEl.innerHTML = tipText;
+    }
 
-  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const min = Math.floor((diff / (1000 * 60)) % 60);
-
-  document.getElementById("day").innerText = String(day).padStart(2, "0");
-  document.getElementById("hour").innerText = String(hour).padStart(2, "0");
-  document.getElementById("min").innerText = String(min).padStart(2, "0");
-  document.getElementById("match-tip").innerHTML = `${fullTimeStr}<br>${tipText}`;
-}
-
-
-
-    async function fetchAllData() {
-  // 页面隐藏时，不请求，节省移动端流量
-  if (document.hidden) return;
-  try {
-    const res = await fetch("./data.json");
-    if (!res.ok) throw new Error("data.json 响应异常");
-    const data = await res.json();
-    cachedPlayerData = data;
-
-    // 渲染球员、赛程
-    renderPlayers(data.players);
-    renderMatches(data.matches || []);
-    updateCountdown(data);
-
-    // 倒计时定时器
-    if (timer) clearInterval(timer);
-    updateCountdown(data);
-    timer = setInterval(() => updateCountdown(data), 60 * 1000);
-
-  } catch (err) {
-    console.error("数据加载失败：", err);
-    document.getElementById("squadContainer").innerHTML = `<div style="text-align:center;padding:40px;color:#ccc">球员数据加载异常</div>`;
-    document.getElementById("matchContainer").innerHTML = `<div style="text-align:center;padding:40px;color:#ccc">赛程数据加载异常</div>`;
-  }
-}
-
-// 页面可见时重新拉取数据
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && !cachedPlayerData) {
-    fetchAllData();
-  }
-});
-
-// 页面加载完成执行
-fetchAllData();
+    async function loadData() {
+      try {
+        const res = await fetch("data.json");
+        const data = await res.json();
+        cachedPlayerData = data;
+        renderPlayers(data.players);
+        renderMatches(data.matches);
+        updateCountdown(data);
+        if(timer) clearInterval(timer);
+        timer = setInterval(()=> updateCountdown(data), 60000);
+      } catch(e) {
+        console.error("数据加载失败",e);
+      }
+    }
+    document.addEventListener("DOMContentLoaded", loadData);
+  </script>
+</body>
+</html>
