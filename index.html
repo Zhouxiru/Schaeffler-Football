@@ -1083,7 +1083,7 @@
     </div>
   </footer>
 
-   <script>
+  <script>
 let cachedPlayerData = null;
 let timer = null;
 
@@ -1101,14 +1101,19 @@ function getVisitorId() {
 }
 const visitorId = getVisitorId();
 
+// 【修复：改用head计数，直接返回总数，不再取数组里的count字段】
 async function getLikeCount(slug) {
   try {
-    const res = await fetch(`${IINE_SUPABASE_URL}/likes?slug=eq.${slug}&select=count`, {
-      headers: { apikey: IINE_API_KEY }
+    const res = await fetch(`${IINE_SUPABASE_URL}/likes?slug=eq.${slug}`, {
+      headers: {
+        apikey: IINE_API_KEY,
+        Prefer: "count=exact"
+      }
     });
-    const json = await res.json();
-    return json[0]?.count ?? 0;
+    const count = res.headers.get("content-range")?.split("/")[1] || 0;
+    return Number(count);
   } catch(e) {
+    console.log("读取点赞失败", e);
     return Number(localStorage.getItem(`like_cache_${slug}`) || 0);
   }
 }
@@ -1125,14 +1130,17 @@ async function toggleLike(slug) {
       headers: { apikey: IINE_API_KEY, "Content-Type":"application/json" },
       body: JSON.stringify({slug, visitor_id:visitorId})
     })
-  }catch(e){}
+  }catch(e){
+    console.log("提交点赞失败",e);
+  }
   return true;
 }
 
 async function renderHotBtn(player, btn) {
   const count = await getLikeCount(player.hotKey);
   btn.textContent = `🔥 热度 ${count}`;
-  if(JSON.parse(localStorage.getItem(`liked_${player.hotKey}`) || "[]").includes(visitorId)){
+  const likedList = JSON.parse(localStorage.getItem(`liked_${player.hotKey}`) || "[]");
+  if(likedList.includes(visitorId)){
     btn.classList.add("liked");
   }
   btn.onclick = async () => {
@@ -1232,44 +1240,48 @@ function renderMatches(list) {
   })
 }
 
-// ========== 重点修改：每次调用都重新计算时间 ==========
+// 倒计时保持原样不变
 function updateCountdown(cfg) {
-  const target = new Date(cfg.nextMatch.matchTime);
-  const now = new Date();
-  const diff = target - now;
+  const timeStr = cfg.nextMatch.matchTime;
   const tipEl = document.getElementById("match-tip");
   const dayEl = document.getElementById("day");
   const hourEl = document.getElementById("hour");
   const minEl = document.getElementById("min");
+  const boxEl = document.querySelector(".countdown-box");
+
+  const datePart = timeStr.split("T")[0];
+  const timePart = timeStr.split("T")[1].split("+")[0];
+  const [y,m,d] = datePart.split("-").map(Number);
+  const [hh,mm,ss] = timePart.split(":").map(Number);
+  const target = new Date(y, m-1, d, hh, mm, ss);
+  const now = new Date();
+  const diff = target - now;
+
+  console.log("目标时间：", target, "现在：", now, "差值ms：", diff);
 
   const weekArr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
-  const y = target.getFullYear();
-  const m = String(target.getMonth()+1).padStart(2,"0");
-  const d = String(target.getDate()).padStart(2,"0");
   const w = weekArr[target.getDay()];
-  const hh = String(target.getHours()).padStart(2,"0");
-  const mm = String(target.getMinutes()).padStart(2,"0");
-  const tipText = `${y}-${m}-${d} ${w} ${hh}:${mm}<br>${cfg.nextMatch.matchTip}`;
+  const tipText = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")} ${w} ${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}<br>${cfg.nextMatch.matchTip}`;
+  tipEl.innerHTML = tipText;
 
   if(diff <= 0) {
-    document.querySelector(".countdown-box").style.display = "none";
-    tipEl.innerHTML = tipText;
+    boxEl.style.display = "none";
+    tipEl.innerHTML += "<br>✅ 比赛已结束";
     return;
   } else {
-    document.querySelector(".countdown-box").style.display = "flex";
+    boxEl.style.display = "flex";
   }
   const day = Math.floor(diff / (1000*60*60*24));
   const rem = diff % (1000*60*60*24);
   const hour = Math.floor(rem / (1000*60*60));
   const rem2 = rem % (1000*60*60);
   const min = Math.floor(rem2 / (1000*60));
-  dayEl.innerText = String(day).padStart(2,"0");
-  hourEl.innerText = String(hour).padStart(2,"0");
-  minEl.innerText = String(min).padStart(2,"0");
-  tipEl.innerHTML = tipText;
 
-  // 递归定时器，稳定循环
-  timer = setTimeout(()=> updateCountdown(cfg), 30000);
+  dayEl.textContent = String(day).padStart(2,"0");
+  hourEl.textContent = String(hour).padStart(2,"0");
+  minEl.textContent = String(min).padStart(2,"0");
+
+  timer = setTimeout(()=> updateCountdown(cfg), 1000);
 }
 
 async function loadData() {
@@ -1286,6 +1298,7 @@ async function loadData() {
 }
 document.addEventListener("DOMContentLoaded", loadData);
 </script>
+
 
 </body>
 </html>
