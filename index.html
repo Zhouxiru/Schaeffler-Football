@@ -1311,7 +1311,37 @@ function updateCountdown(cfg) {
 
 
     async function fetchAllData() {
-      // 页面隐藏时，不请求，节省移动端流量
-      if (document.hidden) return;
-      try {
-        const res =
+  // 页面隐藏时，不请求，节省移动端流量
+  if (document.hidden) return;
+  try {
+    const res = await fetch("./data.json");
+    if (!res.ok) throw new Error("data.json 响应异常");
+    const data = await res.json();
+    cachedPlayerData = data;
+
+    // 渲染球员、赛程
+    renderPlayers(data.players);
+    renderMatches(data.matches || []);
+    updateCountdown(data);
+
+    // 倒计时定时器
+    if (timer) clearInterval(timer);
+    updateCountdown(data);
+    timer = setInterval(() => updateCountdown(data), 60 * 1000);
+
+  } catch (err) {
+    console.error("数据加载失败：", err);
+    document.getElementById("squadContainer").innerHTML = `<div style="text-align:center;padding:40px;color:#ccc">球员数据加载异常</div>`;
+    document.getElementById("matchContainer").innerHTML = `<div style="text-align:center;padding:40px;color:#ccc">赛程数据加载异常</div>`;
+  }
+}
+
+// 页面可见时重新拉取数据
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && !cachedPlayerData) {
+    fetchAllData();
+  }
+});
+
+// 页面加载完成执行
+fetchAllData();
