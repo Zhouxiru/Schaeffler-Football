@@ -850,6 +850,30 @@
         gap: 10px;
       }
     }
+    
+    .like-btn {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--border-green);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.25s ease;
+  font-size:12px;
+  z-index: 10;
+  position: relative;
+}
+.like-btn:hover {
+  box-shadow: 0 0 12px var(--green-glow);
+  border-color: var(--green-bright);
+}
+.like-btn.liked {
+  color: var(--green-bright);
+}
+
   </style>
 </head>
 
