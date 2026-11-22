@@ -697,8 +697,8 @@
       letter-spacing: 1px;
     }
 
-    /* iine点赞按钮 修复样式 */
-    .iine-button {
+    /* iine按钮样式 + 提高点击层级 */
+    .iine {
       background: rgba(0,0,0,0.35);
       border: 1px solid var(--border-green);
       color: #fff;
@@ -710,12 +710,14 @@
       gap: 6px;
       transition: 0.25s ease;
       font-size:12px;
+      z-index: 10;
+      position: relative;
     }
-    .iine-button:hover {
+    .iine:hover {
       box-shadow: 0 0 12px var(--green-glow);
       border-color: var(--green-bright);
     }
-    .iine-button.iine-liked {
+    .iine.liked {
       color: var(--green-bright);
     }
 
@@ -1078,10 +1080,11 @@
     </div>
   </footer>
 
+  <!-- iine脚本放到body末尾，优先加载 -->
+  <script src="https://cdn.jsdelivr.net/gh/welpo/iine@main/iine.mini.js"></script>
    <script>
     let timer = null;
     let cachedPlayerData = null;
-    let iineReady = false;
 
     // 【移动端优化：提前初始化观察者，rootMargin 150px 滚动预加载】
     const photoObserver = new IntersectionObserver((entries) => {
@@ -1146,7 +1149,7 @@
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
           const photoBase = p.photo ? `./players/${p.photo}` : "./players/player-default";
-          // ✅ iine 标准属性 data-iine
+          // ✅ iine 正确写法：class="iine"，value作为唯一标识
           const slug = `player-${p.photo || p.name}`;
           card.innerHTML = `
             ${tagHtml}
@@ -1164,7 +1167,7 @@
                 <div class="stat-item"><div class="stat-num">${p.goal}</div><div class="stat-label">进球</div></div>
               </div>
               <div class="hot-wrap" style="margin-top:10px;">
-                <button class="iine-button" data-iine="${slug}" aria-label="点赞${p.name}">❤️</button>
+                <button class="iine" value="${slug}" aria-label="点赞${p.name}">❤️</button>
               </div>
             </div>
           `;
@@ -1175,8 +1178,8 @@
       // 绑定懒加载
       document.querySelectorAll(".player-photo-wrap").forEach(w=>photoObserver.observe(w));
 
-      // iine就绪就扫描新按钮
-      if(iineReady && window.iine) {
+      // 渲染完球员卡片立刻扫描iine按钮
+      if(window.iine) {
         window.iine.scan();
       }
     }
@@ -1278,15 +1281,6 @@ function updateCountdown(cfg) {
         fetchAllData();
       }
     })
-
-    // 动态加载iine脚本，加载完成标记ready并扫描按钮
-    const iineScript = document.createElement('script');
-    iineScript.src = "https://cdn.jsdelivr.net/gh/welpo/iine@main/iine.mini.js";
-    iineScript.onload = function(){
-      iineReady = true;
-      if(window.iine) window.iine.scan();
-    };
-    document.body.appendChild(iineScript);
   </script>
 </body>
 </html>
