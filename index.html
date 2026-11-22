@@ -1087,11 +1087,9 @@
 let cachedPlayerData = null;
 let timer = null;
 
-// iine.to 公共实例，只能调用rpc，不能直接访问表
 const IINE_URL = "https://nyutibqkriqnoagfbika.supabase.co/rest/v1";
 const IINE_APIKEY = "sb_publishable_EoB7MFJhCmb6PiAk-GPJ4w_PGhQ44Ru";
 
-// 本地访客id，用于前端防重复点击（iine本身不存用户，仅做前端标记）
 function getVisitorId() {
   let vid = localStorage.getItem("iine_visitor_id");
   if (!vid) {
@@ -1102,34 +1100,48 @@ function getVisitorId() {
 }
 const visitorId = getVisitorId();
 
-/** iine官方rpc 获取计数 */
-async function iineGetCount(slug) {
+// 带重试的get_hits
+async function iineGetCountWithRetry(slug, retry = 2) {
+  const cacheKey = `iine_cache_${slug}`;
+  // 优先读出缓存，先显示，避免空白/0
+  let cachedVal = Number(localStorage.getItem(cacheKey) || 0);
   try {
-    const resp = await fetch(`${IINE_URL}/rpc/get_hits?apikey=${IINE_APIKEY}`, {
+    const resp = await fetch(`${IINE_URL}/rpc/get_hits`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ page_slug: slug })
+      headers: {
+        apikey: IINE_APIKEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ page_slug: slug }),
+      signal: AbortSignal.timeout(4000) // 4秒超时
     });
     const num = await resp.json();
-    const val = Number(num) || 0;
-    localStorage.setItem(`iine_cache_${slug}`, val);
-    return val;
+    const realVal = Number(num) || 0;
+    localStorage.setItem(cacheKey, realVal);
+    return realVal;
   } catch (err) {
-    console.warn("iine读取失败", err);
-    return Number(localStorage.getItem(`iine_cache_${slug}`) || 0);
+    if (retry > 0) {
+      console.log(`读取失败，重试，剩余${retry}`);
+      await new Promise(r => setTimeout(r, 600));
+      return iineGetCountWithRetry(slug, retry - 1);
+    }
+    console.warn("iine读取最终失败，使用缓存", slug, err);
+    return cachedVal;
   }
 }
 
-/** iine官方rpc +1计数，iine服务端内部做防刷 */
 async function iineInc(slug) {
   const localDoneList = JSON.parse(localStorage.getItem("iine_local_liked") || "[]");
   if(localDoneList.includes(slug)) return false;
-
   try {
-    await fetch(`${IINE_URL}/rpc/increment_hits?apikey=${IINE_APIKEY}`, {
+    await fetch(`${IINE_URL}/rpc/increment_hits`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ page_slug: slug })
+      headers: {
+        apikey: IINE_APIKEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ page_slug: slug }),
+      signal: AbortSignal.timeout(4000)
     });
     localDoneList.push(slug);
     localStorage.setItem("iine_local_liked", JSON.stringify(localDoneList));
@@ -1141,19 +1153,30 @@ async function iineInc(slug) {
 }
 
 async function renderHotBtn(player, btn) {
-  const cnt = await iineGetCount(player.hotKey);
-  btn.textContent = `🔥 热度 ${cnt}`;
+  const slug = player.hotKey;
+  // 先读取缓存立刻渲染，不等待远程
+  const cacheKey = `iine_cache_${slug}`;
+  let tempCount = Number(localStorage.getItem(cacheKey) || 0);
   const likedArr = JSON.parse(localStorage.getItem("iine_local_liked") || "[]");
-  if(likedArr.includes(player.hotKey)){
+  btn.textContent = `🔥 热度 ${tempCount}`;
+  if(likedArr.includes(slug)){
     btn.classList.add("liked");
   }
 
+  // 后台异步拉取真实后端数值，拿到后覆盖
+  const realCount = await iineGetCountWithRetry(slug);
+  btn.textContent = `🔥 热度 ${realCount}`;
+
   btn.onclick = async ()=>{
-    const ok = await iineInc(player.hotKey);
+    const ok = await iineInc(slug);
     if(ok){
-      const newVal = await iineGetCount(player.hotKey);
-      btn.textContent = `🔥 热度 ${newVal}`;
+      // 先本地视觉+1，再刷新后端真实值
+      let now = Number(btn.textContent.replace(/[^0-9]/g,"")) + 1;
+      btn.textContent = `🔥 热度 ${now}`;
       btn.classList.add("liked");
+      // 重新拉最新
+      const newReal = await iineGetCountWithRetry(slug);
+      btn.textContent = `🔥 热度 ${newReal}`;
     }
   }
 }
@@ -1300,6 +1323,7 @@ async function loadData() {
 }
 document.addEventListener("DOMContentLoaded", loadData);
 </script>
+
 
 
 
