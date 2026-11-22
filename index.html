@@ -697,8 +697,8 @@
       letter-spacing: 1px;
     }
 
-    /* iine按钮样式 + 提高点击层级，火焰橙色调 */
-    .iine {
+    /* 热度按钮样式 */
+    .hot-btn {
       background: rgba(0,0,0,0.35);
       border: 1px solid var(--border-green);
       color: #fff;
@@ -713,11 +713,11 @@
       z-index: 10;
       position: relative;
     }
-    .iine:hover {
+    .hot-btn:hover {
       box-shadow: 0 0 12px rgba(255,120,30,0.55);
       border-color: #ff9447;
     }
-    .iine.liked {
+    .hot-btn.liked {
       color: #ff7822;
       text-shadow: 0 0 8px rgba(255,120,30,0.6);
     }
@@ -1081,11 +1081,87 @@
     </div>
   </footer>
 
-  <!-- iine脚本放到body末尾，优先加载 -->
-  <script src="https://cdn.jsdelivr.net/gh/welpo/iine@main/iine.mini.js"></script>
    <script>
     let timer = null;
     let cachedPlayerData = null;
+
+    // iine.to 共享点赞接口配置
+    const IINE_SUPABASE_URL = "https://vhiweeypifbwacashxjz.supabase.co/rest/v1";
+    const IINE_API_KEY = "sb_publishable_EoB7MFJhCmb6PiAk-GPJ4w_PGhQ44Ru";
+
+    // 获取访客唯一ID
+    function getVisitorId() {
+      let vid = localStorage.getItem("iine_visitor_id");
+      if (!vid) {
+        vid = Math.random().toString(36).slice(2);
+        localStorage.setItem("iine_visitor_id", vid);
+      }
+      return vid;
+    }
+    const visitorId = getVisitorId();
+
+    // 读取云端点赞数
+    async function getIineCount(slug) {
+      try {
+        const res = await fetch(`${IINE_SUPABASE_URL}/rpc/get_hits?apikey=${IINE_API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ page_slug: slug })
+        });
+        const num = await res.json();
+        const val = Number(num) || 0;
+        localStorage.setItem(`iine_cache_${slug}`, val);
+        return val;
+      } catch (e) {
+        console.warn("iine读取失败，使用本地缓存", slug, e);
+        const cache = localStorage.getItem(`iine_cache_${slug}`);
+        return cache ? Number(cache) : 0;
+      }
+    }
+
+    // 点赞+1
+    async function addIineLike(slug) {
+      const likedSet = JSON.parse(localStorage.getItem("iine_liked_set") || "[]");
+      if (likedSet.includes(slug)) return false;
+
+      try {
+        const res = await fetch(`${IINE_SUPABASE_URL}/rpc/increment_hits?apikey=${IINE_API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ page_slug: slug })
+        });
+        if (res.ok) {
+          likedSet.push(slug);
+          localStorage.setItem("iine_liked_set", JSON.stringify(likedSet));
+          const newNum = await getIineCount(slug);
+          return newNum;
+        }
+      } catch (e) {
+        console.warn("iine点赞提交失败", e);
+      }
+      return false;
+    }
+
+    // 渲染热度、绑定点击事件
+    async function renderPlayerHot(player, hotDom) {
+      hotDom.textContent = "加载中...";
+      const count = await getIineCount(player.hotKey);
+      hotDom.textContent = `🔥 热度 ${count}`;
+      hotDom.dataset.slug = player.hotKey;
+
+      const likedSet = JSON.parse(localStorage.getItem("iine_liked_set") || "[]");
+      if (likedSet.includes(player.hotKey)) {
+        hotDom.classList.add("liked");
+      }
+
+      hotDom.onclick = async () => {
+        const newVal = await addIineLike(player.hotKey);
+        if (newVal !== false) {
+          hotDom.textContent = `🔥 热度 ${newVal}`;
+          hotDom.classList.add("liked");
+        }
+      };
+    }
 
     // 【移动端优化：提前初始化观察者，rootMargin 150px 滚动预加载】
     const photoObserver = new IntersectionObserver((entries) => {
@@ -1150,8 +1226,6 @@
           card.className = "player-card";
           const tagHtml = p.tag ? `<div class="player-tag" data-tag="${p.tag}">${p.tag}</div>` : "";
           const photoBase = p.photo ? `./players/${p.photo}` : "./players/player-default";
-          // ✅ iine 正确写法：class="iine"，value作为唯一标识
-          const slug = `player-${p.photo || p.name}`;
           card.innerHTML = `
             ${tagHtml}
             <div class="player-photo-wrap" data-src="${photoBase}">
@@ -1168,21 +1242,19 @@
                 <div class="stat-item"><div class="stat-num">${p.goal}</div><div class="stat-label">进球</div></div>
               </div>
               <div class="hot-wrap" style="margin-top:10px;">
-                <button class="iine" value="${slug}" aria-label="热度${p.name}">🔥</button>
+                <button class="hot-btn"></button>
               </div>
             </div>
           `;
           grid.appendChild(card);
+          // 拿到热度DOM，绑定iine共享点赞
+          const hotBtn = card.querySelector(".hot-btn");
+          renderPlayerHot(p, hotBtn);
         })
         container.appendChild(grid);
       })
       // 绑定懒加载
       document.querySelectorAll(".player-photo-wrap").forEach(w=>photoObserver.observe(w));
-
-      // 渲染完球员卡片立刻扫描iine按钮
-      if(window.iine) {
-        window.iine.scan();
-      }
     }
 
     // 渲染赛程
@@ -1242,46 +1314,4 @@ function updateCountdown(cfg) {
       // 页面隐藏时，不请求，节省移动端流量
       if (document.hidden) return;
       try {
-        const res = await fetch(`./data.json`, { cache: "no-cache" });
-        if (!res.ok) throw new Error("json fetch fail");
-        const cfg = await res.json();
-        cachedPlayerData = cfg;
-        renderPlayers(cfg.players);
-        renderMatches(cfg.matches);
-        updateCountdown(cfg);
-      } catch (err) {
-        console.error("读取data.json失败", err);
-        if(cachedPlayerData){
-          renderPlayers(cachedPlayerData.players);
-          renderMatches(cachedPlayerData.matches);
-          updateCountdown(cachedPlayerData);
-        }
-      }
-    }
-
-    // 【核心优化：浏览器空闲后再拉取球员数据，不抢占首屏渲染】
-    function lazyLoadData() {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(fetchAllData);
-      } else {
-        window.addEventListener('load', fetchAllData, { once: true });
-      }
-    }
-    lazyLoadData();
-
-    // 轮询，页面隐藏自动暂停
-    timer = setInterval(()=>{
-      if(!document.hidden){
-        fetchAllData();
-      }
-    }, 60 * 1000);
-
-    // 页面切后台/前台监听
-    document.addEventListener("visibilitychange", ()=>{
-      if(!document.hidden && !cachedPlayerData){
-        fetchAllData();
-      }
-    })
-  </script>
-</body>
-</html>
+        const res =
