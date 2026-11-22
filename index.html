@@ -1083,7 +1083,7 @@
     </div>
   </footer>
 
- <script>
+<script>
 let cachedPlayerData = null;
 let timer = null;
 
@@ -1096,14 +1096,15 @@ function getVisitorId() {
     vid = Math.random().toString(36).slice(2);
     localStorage.setItem("iine_visitor_id", vid);
   }
+  console.log("访客ID：", vid);
   return vid;
 }
 const visitorId = getVisitorId();
 
-// 带重试的get_hits
+// 带重试读取
 async function iineGetCountWithRetry(slug, retry = 2) {
+  console.log("=====开始读取热度，slug：", slug);
   const cacheKey = `iine_cache_${slug}`;
-  // 优先读出缓存，先显示，避免空白/0
   let cachedVal = Number(localStorage.getItem(cacheKey) || 0);
   try {
     const resp = await fetch(`${IINE_URL}/rpc/get_hits`, {
@@ -1113,26 +1114,31 @@ async function iineGetCountWithRetry(slug, retry = 2) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ page_slug: slug }),
-      signal: AbortSignal.timeout(4000) // 4秒超时
+      signal: AbortSignal.timeout(4000)
     });
+    console.log("读取请求返回状态：", resp.status);
     const num = await resp.json();
+    console.log("后端返回原始值：", num);
     const realVal = Number(num) || 0;
     localStorage.setItem(cacheKey, realVal);
     return realVal;
   } catch (err) {
+    console.error("读取热度接口异常", err);
     if (retry > 0) {
-      console.log(`读取失败，重试，剩余${retry}`);
       await new Promise(r => setTimeout(r, 600));
       return iineGetCountWithRetry(slug, retry - 1);
     }
-    console.warn("iine读取最终失败，使用缓存", slug, err);
     return cachedVal;
   }
 }
 
 async function iineInc(slug) {
+  console.log("=====发起点赞+1，slug：", slug);
   const localDoneList = JSON.parse(localStorage.getItem("iine_local_liked") || "[]");
-  if(localDoneList.includes(slug)) return false;
+  if(localDoneList.includes(slug)) {
+    console.log("本地标记：已经点过赞，跳过");
+    return false;
+  }
   try {
     await fetch(`${IINE_URL}/rpc/increment_hits`, {
       method: "POST",
@@ -1145,16 +1151,17 @@ async function iineInc(slug) {
     });
     localDoneList.push(slug);
     localStorage.setItem("iine_local_liked", JSON.stringify(localDoneList));
+    console.log("点赞提交成功");
     return true;
   } catch (err) {
-    console.warn("iine提交点赞失败", err);
+    console.error("点赞提交接口异常", err);
     return false;
   }
 }
 
 async function renderHotBtn(player, btn) {
   const slug = player.hotKey;
-  // 先读取缓存立刻渲染，不等待远程
+  console.log("渲染球员按钮，hotKey =", slug);
   const cacheKey = `iine_cache_${slug}`;
   let tempCount = Number(localStorage.getItem(cacheKey) || 0);
   const likedArr = JSON.parse(localStorage.getItem("iine_local_liked") || "[]");
@@ -1163,18 +1170,18 @@ async function renderHotBtn(player, btn) {
     btn.classList.add("liked");
   }
 
-  // 后台异步拉取真实后端数值，拿到后覆盖
-  const realCount = await iineGetCountWithRetry(slug);
-  btn.textContent = `🔥 热度 ${realCount}`;
+  // 异步拉后端真实值
+  iineGetCountWithRetry(slug).then(realCount=>{
+    btn.textContent = `🔥 热度 ${realCount}`;
+    console.log("更新按钮显示数字：", realCount);
+  });
 
   btn.onclick = async ()=>{
     const ok = await iineInc(slug);
     if(ok){
-      // 先本地视觉+1，再刷新后端真实值
       let now = Number(btn.textContent.replace(/[^0-9]/g,"")) + 1;
       btn.textContent = `🔥 热度 ${now}`;
       btn.classList.add("liked");
-      // 重新拉最新
       const newReal = await iineGetCountWithRetry(slug);
       btn.textContent = `🔥 热度 ${newReal}`;
     }
@@ -1311,6 +1318,7 @@ function updateCountdown(cfg) {
 
 async function loadData() {
   try {
+    console.log("开始加载data.json");
     const res = await fetch("data.json");
     const data = await res.json();
     cachedPlayerData = data;
@@ -1318,13 +1326,11 @@ async function loadData() {
     renderMatches(data.matches);
     updateCountdown(data);
   } catch(e) {
-    console.error("数据加载失败",e);
+    console.error("加载data.json失败",e);
   }
 }
 document.addEventListener("DOMContentLoaded", loadData);
 </script>
-
-
 
 
 </body>
