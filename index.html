@@ -697,30 +697,26 @@
       letter-spacing: 1px;
     }
 
-    /* 热度按钮 */
-    .hot-wrap{
-      margin-top:10px;
-    }
-    .hot-btn-cloud{
-      background:#1e3b2e;
-      color:var(--green-bright);
-      border:1px solid var(--border-green);
-      padding:4px 10px;
-      border-radius:4px;
-      cursor:pointer;
+    /* iine.to 点赞按钮 */
+    .iine-button {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--border-green);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.25s ease;
       font-size:12px;
-      transition:0.2s;
     }
-    .hot-btn-cloud.voted{
-      opacity:0.4;
-      cursor:not-allowed;
+    .iine-button:hover {
+      box-shadow: 0 0 12px var(--green-glow);
+      border-color: var(--green-bright);
     }
-    .hot-btn-cloud:hover:not(.voted){
-      background:#244c3a;
-    }
-    .hot-btn-cloud:disabled{
-      opacity:0.5;
-      cursor:wait;
+    .iine-button.clicked {
+      color: var(--green-bright);
     }
 
     /* 赛程 */
@@ -1083,17 +1079,8 @@
   </footer>
 
    <script>
-    // =========【这里改成你的TCB PostgREST地址 + 匿名apikey】=========
-    const POSTGREST_URL = "https://schaeffler-football-d4bib37af266.api.shanghai.tcb-api.tencentcloudapi.com/v1/rdb/rest";
-    const API_KEY = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImEyNzcyY2YxLTRkOGYtNGIzYi1hOTc3LTU0MjU0YWI5YzEyMSJ9.eyJpc3MiOiJodHRwczovL3NjaGFlZmZsZXItZm9vdGJhbGwtZDRiaWIzN2FmMjY2LmFwLXNoYW5naGFpLnRjYi1hcGkudGVuY2VudGNsb3VkYXBpLmNvbSIsInN1YiI6ImFub24iLCJhdWQiOiJzY2hhZWZmbGVyLWZvb3RiYWxsLWQ0YmliMzdhZjI2NiIsImV4cCI6NDA5Njg3ODc1MywiaWF0IjoxNzkzMTk1NTUzLCJub25jZSI6InEwZTlhTi1vVGJlTGM4ZTJLcGNET3ciLCJhdF9oYXNoIjoicTBlOWFOLW9UYmVMYzhlMktwY0RPdyIsIm5hbWUiOiJBbm9ueW1vdXMiLCJzY29wZSI6ImFub255bW91cyIsInByb2plY3RfaWQiOiJzY2hhZWZmbGVyLWQ0YmliMzdhZjI2NiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.GLUOTVpBogI--Tb_NvOSxoSKpZ2YVkNk6SLORhBwIhSemNoIKHGjgJ8csfTc8cnPqmSQww47QNL5B2MLRSlpWE4nFJlzJZh1cuSt73j8VT1YVpFe6WwB_iTrdVeOP0d6hYdM_ECamPZDnfRYdFc65WbpxssChFnOUSP_cH-jjBT0PaJohlczoFPceWKJOvlYz-jsX4V7mcture5o4a47oHTO7YVp5CniZ7jSby7JC6sePiNe01i_BK5FJIS7q0k011er1zdQngXuMxuViVJmt_QFLohsaKAAksFiAewJtrKdf349gKnhqsP5lR6zCfbsFTu-pO4e7kyE1WHhi3iq3g";
-
-    const FETCH_INTERVAL = 60 * 1000;
     let timer = null;
     let cachedPlayerData = null;
-    // 热度缓存
-    let hotCache = {};
-    const STORAGE_VOTE_KEY = 'votedPlayerCloud';
-    const VOTE_EXPIRE = 24 * 60 * 60 * 1000; // 24小时防重复
 
     // 【移动端优化：提前初始化观察者，rootMargin 150px 滚动预加载】
     const photoObserver = new IntersectionObserver((entries) => {
@@ -1127,15 +1114,6 @@
       })
     }, {rootMargin: "150px 0px", threshold: 0.01});
 
-
-    // 统一请求头（apikey放在header，TCB标准用法）
-    function getHeaders() {
-      return {
-        "apikey": API_KEY,
-        "Authorization": `Bearer ${API_KEY}`,
-        "Content-Type": "application/json"
-      }
-    }
 
     // 渲染球员卡片：按位置分组渲染
     function renderPlayers(players) {
@@ -1182,8 +1160,10 @@
                 <div class="stat-item"><div class="stat-num">${p.appear}</div><div class="stat-label">出场</div></div>
                 <div class="stat-item"><div class="stat-num">${p.goal}</div><div class="stat-label">进球</div></div>
               </div>
-              <div class="hot-wrap">
-                <button class="hot-btn-cloud" data-key="${p.hotKey}">🔥 热度：<span class="hot-val">--</span></button>
+              <div class="hot-wrap" style="margin-top:10px;">
+                <button class="iine-button" data-slug="player-${p.photo}" data-icon="heart" aria-label="点赞${p.name}">
+                  <noscript>❤️</noscript>
+                </button>
               </div>
             </div>
           `;
@@ -1193,7 +1173,6 @@
       })
       // 绑定懒加载
       document.querySelectorAll(".player-photo-wrap").forEach(w=>photoObserver.observe(w));
-      bindHotBtn();
     }
 
     // 渲染赛程
@@ -1211,73 +1190,6 @@
         `;
         container.appendChild(item);
       });
-    }
-
-    // 读取全部热度：playerhot 表 p_id, hotcount
-    async function loadAllHot() {
-      try {
-        const res = await fetch(`${POSTGREST_URL}/playerhot`, { headers: getHeaders() });
-        if (!res.ok) throw new Error("read hot fail");
-        const list = await res.json();
-        hotCache = {};
-        list.forEach(item => {
-          hotCache[item.p_id] = item.hotcount;
-        });
-        renderHotUI();
-      } catch (e) {
-        console.error("读取热度失败", e);
-      }
-    }
-
-    function renderHotUI() {
-      const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
-      document.querySelectorAll(".hot-btn-cloud").forEach(btn => {
-        const key = btn.dataset.key;
-        const valSpan = btn.querySelector(".hot-val");
-        valSpan.textContent = hotCache[key] ?? 0;
-        if(voteRecord[key] && Date.now() - voteRecord[key] < VOTE_EXPIRE){
-          btn.classList.add("voted");
-        }else{
-          btn.classList.remove("voted");
-        }
-      })
-    }
-
-    // 点赞，调用 rpc addhot(playerid text) 和你当前SQL对齐
-    async function addHot(playerid, btn) {
-      const voteRecord = JSON.parse(localStorage.getItem(STORAGE_VOTE_KEY) || '{}');
-      const now = Date.now();
-      if(voteRecord[playerid] && (now - voteRecord[playerid]) < VOTE_EXPIRE){
-        alert("24小时内已经给该球员点过赞啦！");
-        return;
-      }
-      btn.disabled = true;
-      try {
-        const resp = await fetch(`${POSTGREST_URL}/rpc/addhot`, {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify({
-            playerid: playerid
-          })
-        });
-        if (!resp.ok) throw new Error("rpc fail");
-        await loadAllHot();
-        voteRecord[playerid] = now;
-        localStorage.setItem(STORAGE_VOTE_KEY, JSON.stringify(voteRecord));
-      } catch(err){
-        console.error("点赞请求异常详情：", err);
-        alert("网络异常，请稍后重试");
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    // 绑定按钮
-    function bindHotBtn() {
-      document.querySelectorAll(".hot-btn-cloud").forEach(btn => {
-        const key = btn.dataset.key;
-        btn.onclick = ()=> addHot(key, btn);
-      })
     }
 
 // 更新倒计时
@@ -1327,7 +1239,6 @@ function updateCountdown(cfg) {
         renderPlayers(cfg.players);
         renderMatches(cfg.matches);
         updateCountdown(cfg);
-        await loadAllHot();
       } catch (err) {
         console.error("读取data.json失败", err);
         if(cachedPlayerData){
@@ -1353,7 +1264,7 @@ function updateCountdown(cfg) {
       if(!document.hidden){
         fetchAllData();
       }
-    }, FETCH_INTERVAL);
+    }, 60 * 1000);
 
     // 页面切后台/前台监听
     document.addEventListener("visibilitychange", ()=>{
@@ -1362,7 +1273,6 @@ function updateCountdown(cfg) {
       }
     })
   </script>
-
-
+<script defer src="https://cdn.jsdelivr.net/gh/welpo/iine@main/iine.mini.js"></script>
 </body>
 </html>
