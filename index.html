@@ -1083,71 +1083,76 @@
     </div>
   </footer>
 
-  <script>
+ <script>
 let cachedPlayerData = null;
 let timer = null;
 
-// iine.to 共享点赞接口
-const IINE_SUPABASE_URL = "https://vhiweeypifbwacashxjz.supabase.co/rest/v1";
-const IINE_API_KEY = "sb_publishable_EoB7MFJhCmb6PiAk-GPJ4w_PGhQ44Ru";
+// iine.to 公共实例，只能调用rpc，不能直接访问表
+const IINE_URL = "https://nyutibqkriqnoagfbika.supabase.co/rest/v1";
+const IINE_APIKEY = "sb_publishable_EoB7MFJhCmb6PiAk-GPJ4w_PGhQ44Ru";
 
+// 本地访客id，用于前端防重复点击（iine本身不存用户，仅做前端标记）
 function getVisitorId() {
-  let vid = localStorage.getItem("visitor_id");
+  let vid = localStorage.getItem("iine_visitor_id");
   if (!vid) {
     vid = Math.random().toString(36).slice(2);
-    localStorage.setItem("visitor_id", vid);
+    localStorage.setItem("iine_visitor_id", vid);
   }
   return vid;
 }
 const visitorId = getVisitorId();
 
-// 【修复：改用head计数，直接返回总数，不再取数组里的count字段】
-async function getLikeCount(slug) {
+/** iine官方rpc 获取计数 */
+async function iineGetCount(slug) {
   try {
-    const res = await fetch(`${IINE_SUPABASE_URL}/likes?slug=eq.${slug}`, {
-      headers: {
-        apikey: IINE_API_KEY,
-        Prefer: "count=exact"
-      }
+    const resp = await fetch(`${IINE_URL}/rpc/get_hits?apikey=${IINE_APIKEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ page_slug: slug })
     });
-    const count = res.headers.get("content-range")?.split("/")[1] || 0;
-    return Number(count);
-  } catch(e) {
-    console.log("读取点赞失败", e);
-    return Number(localStorage.getItem(`like_cache_${slug}`) || 0);
+    const num = await resp.json();
+    const val = Number(num) || 0;
+    localStorage.setItem(`iine_cache_${slug}`, val);
+    return val;
+  } catch (err) {
+    console.warn("iine读取失败", err);
+    return Number(localStorage.getItem(`iine_cache_${slug}`) || 0);
   }
 }
 
-async function toggleLike(slug) {
-  const key = `liked_${slug}`;
-  let arr = JSON.parse(localStorage.getItem(key) || "[]");
-  if(arr.includes(visitorId)) return false;
-  arr.push(visitorId);
-  localStorage.setItem(key, JSON.stringify(arr));
+/** iine官方rpc +1计数，iine服务端内部做防刷 */
+async function iineInc(slug) {
+  const localDoneList = JSON.parse(localStorage.getItem("iine_local_liked") || "[]");
+  if(localDoneList.includes(slug)) return false;
+
   try {
-    await fetch(`${IINE_SUPABASE_URL}/likes`, {
-      method:"POST",
-      headers: { apikey: IINE_API_KEY, "Content-Type":"application/json" },
-      body: JSON.stringify({slug, visitor_id:visitorId})
-    })
-  }catch(e){
-    console.log("提交点赞失败",e);
+    await fetch(`${IINE_URL}/rpc/increment_hits?apikey=${IINE_APIKEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ page_slug: slug })
+    });
+    localDoneList.push(slug);
+    localStorage.setItem("iine_local_liked", JSON.stringify(localDoneList));
+    return true;
+  } catch (err) {
+    console.warn("iine提交点赞失败", err);
+    return false;
   }
-  return true;
 }
 
 async function renderHotBtn(player, btn) {
-  const count = await getLikeCount(player.hotKey);
-  btn.textContent = `🔥 热度 ${count}`;
-  const likedList = JSON.parse(localStorage.getItem(`liked_${player.hotKey}`) || "[]");
-  if(likedList.includes(visitorId)){
+  const cnt = await iineGetCount(player.hotKey);
+  btn.textContent = `🔥 热度 ${cnt}`;
+  const likedArr = JSON.parse(localStorage.getItem("iine_local_liked") || "[]");
+  if(likedArr.includes(player.hotKey)){
     btn.classList.add("liked");
   }
-  btn.onclick = async () => {
-    const ok = await toggleLike(player.hotKey);
+
+  btn.onclick = async ()=>{
+    const ok = await iineInc(player.hotKey);
     if(ok){
-      const newCnt = await getLikeCount(player.hotKey);
-      btn.textContent = `🔥 热度 ${newCnt}`;
+      const newVal = await iineGetCount(player.hotKey);
+      btn.textContent = `🔥 热度 ${newVal}`;
       btn.classList.add("liked");
     }
   }
@@ -1240,7 +1245,6 @@ function renderMatches(list) {
   })
 }
 
-// 倒计时保持原样不变
 function updateCountdown(cfg) {
   const timeStr = cfg.nextMatch.matchTime;
   const tipEl = document.getElementById("match-tip");
@@ -1256,8 +1260,6 @@ function updateCountdown(cfg) {
   const target = new Date(y, m-1, d, hh, mm, ss);
   const now = new Date();
   const diff = target - now;
-
-  console.log("目标时间：", target, "现在：", now, "差值ms：", diff);
 
   const weekArr = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
   const w = weekArr[target.getDay()];
@@ -1298,6 +1300,7 @@ async function loadData() {
 }
 document.addEventListener("DOMContentLoaded", loadData);
 </script>
+
 
 
 </body>
